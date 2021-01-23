@@ -17,10 +17,13 @@
     "nuxt": "^2.0.0"
   },
   "devDependencies": {
-    "babel-eslint": "^10.0.1",
+    "babel-eslint": "^10.1.0",
     "eslint": "^4.19.1",
+    "eslint-config-prettier": "^7.2.0",
     "eslint-friendly-formatter": "^4.0.1",
-    "eslint-loader": "^2.1.1",
-    "eslint-plugin-vue": "^4.0.0"
+    "eslint-loader": "^2.2.1",
+    "eslint-plugin-prettier": "^3.3.1",
+    "eslint-plugin-vue": "^4.7.1",
+    "prettier": "^2.2.1"
   }
 }
