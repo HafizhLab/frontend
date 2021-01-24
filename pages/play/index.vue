@@ -3,7 +3,7 @@
     <div class="title pb-3 text-center">
       <h2>Play</h2>
     </div>
-    <div class="main-menu mt-5 container">
+    <div class="main-menu mt-4 container">
       <nuxt-link to="/play/personal-test">
         <div class="personal-test-card text-center p-3 pt-4 pb-4">
           <img src="~/assets/img/singleplayer-icon.png" alt="" />

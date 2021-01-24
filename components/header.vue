@@ -7,6 +7,8 @@
           src="~/assets/img/icon-nav-bar.png"
           alt="AppLogo"
           class="inline-block"
+          width="25"
+          height="32.758620689655"
         />
         <h3 class="inline-block">HafizhLab</h3>
       </b-navbar-brand>

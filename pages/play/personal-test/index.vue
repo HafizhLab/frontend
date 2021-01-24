@@ -9,26 +9,61 @@
         </h2>
       </div>
     </div>
-    <div class="main-menu mt-5 container">
-      <nuxt-link to="/play/personal-test">
-        <div class="personal-test-card text-center p-3 pt-4 pb-4">
-          <img src="~/assets/img/singleplayer-icon.png" alt="" />
-          <h5 class="mt-3">Personal Test</h5>
-        </div>
-      </nuxt-link>
-      <nuxt-link to="/play/multiplayer">
-        <div class="multiplayer-test-card text-center p-3 pt-4 pb-4 mt-4">
-          <img src="~/assets/img/multiplayer-icon.png" alt="" />
-          <h5 class="mt-3">Multiplayer</h5>
-        </div>
-      </nuxt-link>
+    <div class="main-menu mt-4 container">
+      <div class="type">
+        <h5>Test Type</h5>
+        <b-button
+          :variant="[byVerse ? 'primary' : 'outline-primary']"
+          @click="switchTestType('verse')"
+          ><p>By Verse</p></b-button
+        >
+        <b-button
+          :variant="[byVerse ? 'outline-primary' : 'primary']"
+          @click="switchTestType('word')"
+          ><p>By Word</p></b-button
+        >
+      </div>
+      <div class="based mt-3">
+        <h5>Choose Based on</h5>
+        <b-button
+          :variant="[surah ? 'primary' : 'outline-primary']"
+          @click="switchBasedType('surah')"
+          ><p>Surah</p></b-button
+        >
+        <b-button
+          :variant="[surah ? 'outline-primary' : 'primary']"
+          @click="switchBasedType('juz')"
+          ><p>Juz</p></b-button
+        >
+      </div>
     </div>
   </div>
 </template>
 
 <script>
 export default {
-  components: {},
+  data() {
+    return {
+      byVerse: true,
+      surah: true,
+    };
+  },
+  methods: {
+    switchTestType(type) {
+      if (this.byVerse && type != "verse") {
+        this.byVerse = false;
+      } else if (!this.byVerse && type != "word") {
+        this.byVerse = true;
+      }
+    },
+    switchBasedType(type) {
+      if (this.surah && type != "surah") {
+        this.surah = false;
+      } else if (!this.surah && type != "juz") {
+        this.surah = true;
+      }
+    },
+  },
 };
 </script>
 
@@ -42,26 +77,33 @@ export default {
   font-weight: 600;
 }
 
-.personal-test-card {
-  border-radius: 15px;
-  background-color: #359d9e;
-}
-
-.personal-test-card h5 {
-  color: white;
-  font-weight: 500;
+.main-menu h5,
+.main-menu p {
+  font-weight: 600;
   margin-bottom: 0;
 }
 
-.multiplayer-test-card {
-  border-radius: 15px;
-  background-color: #5ec699;
+.main-menu button {
+  margin-top: 1rem;
+  border-radius: 3rem;
+  padding: 1rem;
+  padding-left: 2rem;
+  padding-right: 2rem;
 }
 
-.multiplayer-test-card h5 {
-  color: white;
-  font-weight: 500;
-  margin-bottom: 0;
+.main-menu .btn-primary,
+.main-menu .btn-primary:hover {
+  background-color: #49c0db;
+  border-color: #49c0db;
+  outline: none;
+}
+
+.main-menu .btn-outline-primary,
+.main-menu .btn-outline-primary:hover {
+  color: #9fa5c0;
+  border-color: #9fa5c0;
+  background-color: white;
+  outline: none;
 }
 
 a,
