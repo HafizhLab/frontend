@@ -2,11 +2,11 @@
   <div class="pt-3 pb-5">
     <div class="title pb-3">
       <div class="container">
-        <h2>
+        <h3>
           <nuxt-link to="/play"
             ><b-icon icon="chevron-left" class="mr-3"></b-icon></nuxt-link
           >Personal Test
-        </h2>
+        </h3>
       </div>
     </div>
     <div class="main-menu mt-4 container">
@@ -23,7 +23,7 @@
           ><p>By Word</p></b-button
         >
       </div>
-      <div class="based mt-3">
+      <div class="based mt-4">
         <h5>Choose Based on</h5>
         <b-button
           :variant="[surah ? 'primary' : 'outline-primary']"
@@ -36,12 +36,33 @@
           ><p>Juz</p></b-button
         >
       </div>
+      <div class="choose mt-4">
+        <h5 v-if="surah" class="mb-3">Choose Surah</h5>
+        <h5 v-else class="mb-3">Choose Juz</h5>
+        <vue-simple-suggest
+          v-model="chosen"
+          :list="simpleSuggestionList"
+          :filter-by-query="true"
+          placeholder="Search..."
+        ></vue-simple-suggest>
+      </div>
+      <div class="button-start text-center mt-3">
+        <nuxt-link to="/play/personal-test/questions/1">
+          <b-button variant="primary"><p>Start</p></b-button>
+        </nuxt-link>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+import VueSimpleSuggest from "vue-simple-suggest";
+import "vue-simple-suggest/dist/styles.css";
+
 export default {
+  components: {
+    VueSimpleSuggest,
+  },
   data() {
     return {
       byVerse: true,
@@ -63,6 +84,19 @@ export default {
         this.surah = true;
       }
     },
+    simpleSuggestionList() {
+      if (this.surah) {
+        return [
+          "Al-Faatihah",
+          "Al-Baqarah",
+          "Ali-Imran",
+          "An-Nisaa",
+          "Al-Maaidah",
+        ];
+      } else {
+        return ["Juz 1", "Juz 2", "Juz 3", "Juz 4", "Juz 5"];
+      }
+    },
   },
 };
 </script>
@@ -72,7 +106,7 @@ export default {
   border-bottom: 1px solid #ededeb;
 }
 
-.title h2 {
+.title h3 {
   margin-bottom: 0;
   font-weight: 600;
 }
@@ -89,6 +123,12 @@ export default {
   padding: 1rem;
   padding-left: 2rem;
   padding-right: 2rem;
+}
+
+.button-start button {
+  padding: 1rem;
+  padding-left: 3.5rem;
+  padding-right: 3.5rem;
 }
 
 .main-menu .btn-primary,
@@ -110,5 +150,27 @@ a,
 a:hover {
   text-decoration: none;
   color: black;
+}
+
+.vue-simple-suggest.designed .input-wrapper input {
+  border-radius: 2rem;
+  padding: 1rem;
+  padding-left: 2rem;
+  padding-right: 2rem;
+  border: 1px solid #8c8fa5;
+  filter: drop-shadow(0px 2px 6px rgba(0, 0, 0, 0.15));
+}
+
+.vue-simple-suggest.designed .input-wrapper input:focus {
+  border-radius: 2rem;
+  padding: 1rem;
+  padding-left: 2rem;
+  padding-right: 2rem;
+  border: 1px solid #49c0db;
+}
+
+.vue-simple-suggest.designed .suggestions {
+  max-height: 10rem;
+  overflow-y: scroll;
 }
 </style>

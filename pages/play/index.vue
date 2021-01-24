@@ -1,7 +1,7 @@
 <template>
   <div class="pt-3 pb-5">
     <div class="title pb-3 text-center">
-      <h2>Play</h2>
+      <h3>Play</h3>
     </div>
     <div class="main-menu mt-4 container">
       <nuxt-link to="/play/personal-test">
@@ -31,7 +31,7 @@ export default {
   border-bottom: 1px solid #ededeb;
 }
 
-.title h2 {
+.title h3 {
   margin-bottom: 0;
   font-weight: 600;
 }

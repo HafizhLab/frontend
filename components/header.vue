@@ -29,6 +29,7 @@ export default {};
 
 .navbar.navbar-dark.bg-dark {
   background-color: #49c0db !important;
+  padding-left: 1.5rem;
 }
 
 .inline-block {
