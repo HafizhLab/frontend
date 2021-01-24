@@ -19,25 +19,25 @@ export default {};
 </script>
 
 <style scoped>
- .wrapper {
-     position: sticky;
-     top: 0;
-     z-index: 1;
- }
+.wrapper {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
 
- .navbar.navbar-dark.bg-dark{
-    background-color: #49C0DB !important;
- }
+.navbar.navbar-dark.bg-dark {
+  background-color: #49c0db !important;
+}
 
- .inline-block {
-     display: inline-block;
- }
+.inline-block {
+  display: inline-block;
+}
 
- h3 {
-     vertical-align: middle;
-     margin-left: .5rem;
-     font-family: "Montserrat", sans-serif;
-     font-weight: bold;
-     margin-bottom: 0;
- }
+h3 {
+  vertical-align: middle;
+  margin-left: 0.5rem;
+  font-family: "Montserrat", sans-serif;
+  font-weight: bold;
+  margin-bottom: 0;
+}
 </style>

@@ -38,5 +38,8 @@ module.exports = {
     },
   },
   modules: ["@nuxtjs/pwa", "bootstrap-vue/nuxt"],
+  boostrapVue: {
+    icons: true,
+  },
   css: ["~/assets/fonts/montserrat.css"],
 };

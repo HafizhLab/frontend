@@ -27,8 +27,8 @@ html {
 }
 
 body {
-   font-family: "Montserrat", sans-serif; 
-   font-size: 13px;
+  font-family: "Montserrat", sans-serif;
+  font-size: 13px;
 }
 
 *,
