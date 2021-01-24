@@ -12,3 +12,6 @@ dist
 
 # Intellij
 .idea
+
+# VS Code
+.vscode
