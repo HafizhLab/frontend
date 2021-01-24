@@ -47,7 +47,7 @@
         ></vue-simple-suggest>
       </div>
       <div class="button-start text-center mt-3">
-        <nuxt-link to="/play/personal-test/questions/1">
+        <nuxt-link to="/play/personal-test/questions">
           <b-button variant="primary"><p>Start</p></b-button>
         </nuxt-link>
       </div>

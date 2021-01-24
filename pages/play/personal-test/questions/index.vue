@@ -1,6 +1,6 @@
 <template>
   <div class="container text-center mt-3">
-    <h3>Question {{ $route.params.id }}</h3>
+    <h3>Question 1</h3>
   </div>
 </template>
 
