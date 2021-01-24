@@ -13,12 +13,12 @@
       <div class="type">
         <h5>Test Type</h5>
         <b-button
-          :variant="[testType == 'verse' ? 'primary' : 'outline-primary']"
+          :variant="[testType == 'Verse' ? 'primary' : 'outline-primary']"
           @click="switchTestType('verse')"
           ><p>By Verse</p></b-button
         >
         <b-button
-          :variant="[testType == 'word' ? 'primary' : 'outline-primary']"
+          :variant="[testType == 'Word' ? 'primary' : 'outline-primary']"
           @click="switchTestType('word')"
           ><p>By Word</p></b-button
         >
@@ -26,19 +26,18 @@
       <div class="based mt-4">
         <h5>Choose Based on</h5>
         <b-button
-          :variant="[testBasedOn == 'surah' ? 'primary' : 'outline-primary']"
+          :variant="[testBasedOn == 'Surah' ? 'primary' : 'outline-primary']"
           @click="switchBasedType('surah')"
           ><p>Surah</p></b-button
         >
         <b-button
-          :variant="[testBasedOn == 'juz' ? 'primary' : 'outline-primary']"
+          :variant="[testBasedOn == 'Juz' ? 'primary' : 'outline-primary']"
           @click="switchBasedType('juz')"
           ><p>Juz</p></b-button
         >
       </div>
       <div class="choose mt-4">
-        <h5 v-if="testBasedOn == 'surah'" class="mb-3">Choose Surah</h5>
-        <h5 v-else class="mb-3">Choose Juz</h5>
+        <h5 class="mb-3">Choose {{ testBasedOn }}</h5>
         <vue-simple-suggest
           v-model="chosen"
           :list="simpleSuggestionList"
@@ -70,24 +69,24 @@ export default {
   },
   data() {
     return {
-      testType: "verse",
-      testBasedOn: "surah",
+      testType: "Verse",
+      testBasedOn: "Surah",
       chosen: "",
     };
   },
   methods: {
     switchTestType(type) {
-      if (this.testType == "verse" && type != "verse") {
-        this.testType = "word";
-      } else if (this.testType == "word" && type != "word") {
-        this.testType = "verse";
+      if (this.testType == "Verse" && type != "verse") {
+        this.testType = "Word";
+      } else if (this.testType == "Word" && type != "word") {
+        this.testType = "Verse";
       }
     },
     switchBasedType(type) {
-      if (this.testBasedOn == "surah" && type != "surah") {
-        this.testBasedOn = "juz";
-      } else if (this.testBasedOn == "juz" && type != "juz") {
-        this.testBasedOn = "surah";
+      if (this.testBasedOn == "Surah" && type != "surah") {
+        this.testBasedOn = "Juz";
+      } else if (this.testBasedOn == "Juz" && type != "juz") {
+        this.testBasedOn = "Surah";
       }
     },
     simpleSuggestionList() {
