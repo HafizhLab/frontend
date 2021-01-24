@@ -1,8 +1,13 @@
 <template>
   <div class="pt-3 pb-5">
     <div class="title pb-3">
-      <b-icon icon="chevron-left"></b-icon>
-      <h1>Personal Test</h1>
+      <div class="container">
+        <h2>
+          <nuxt-link to="/play"
+            ><b-icon icon="chevron-left" class="mr-3"></b-icon></nuxt-link
+          >Personal Test
+        </h2>
+      </div>
     </div>
     <div class="main-menu mt-5 container">
       <nuxt-link to="/play/personal-test">
@@ -32,7 +37,7 @@ export default {
   border-bottom: 1px solid #ededeb;
 }
 
-.title h1 {
+.title h2 {
   margin-bottom: 0;
   font-weight: 600;
 }
@@ -59,7 +64,9 @@ export default {
   margin-bottom: 0;
 }
 
+a,
 a:hover {
   text-decoration: none;
+  color: black;
 }
 </style>
