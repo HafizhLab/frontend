@@ -13,12 +13,12 @@
       <div class="type">
         <h5>Test Type</h5>
         <b-button
-          :variant="[byVerse ? 'primary' : 'outline-primary']"
+          :variant="[testType == 'verse' ? 'primary' : 'outline-primary']"
           @click="switchTestType('verse')"
           ><p>By Verse</p></b-button
         >
         <b-button
-          :variant="[byVerse ? 'outline-primary' : 'primary']"
+          :variant="[testType == 'word' ? 'primary' : 'outline-primary']"
           @click="switchTestType('word')"
           ><p>By Word</p></b-button
         >
@@ -26,18 +26,18 @@
       <div class="based mt-4">
         <h5>Choose Based on</h5>
         <b-button
-          :variant="[surah ? 'primary' : 'outline-primary']"
+          :variant="[testBasedOn == 'surah' ? 'primary' : 'outline-primary']"
           @click="switchBasedType('surah')"
           ><p>Surah</p></b-button
         >
         <b-button
-          :variant="[surah ? 'outline-primary' : 'primary']"
+          :variant="[testBasedOn == 'juz' ? 'primary' : 'outline-primary']"
           @click="switchBasedType('juz')"
           ><p>Juz</p></b-button
         >
       </div>
       <div class="choose mt-4">
-        <h5 v-if="surah" class="mb-3">Choose Surah</h5>
+        <h5 v-if="testBasedOn == 'surah'" class="mb-3">Choose Surah</h5>
         <h5 v-else class="mb-3">Choose Juz</h5>
         <vue-simple-suggest
           v-model="chosen"
@@ -47,7 +47,12 @@
         ></vue-simple-suggest>
       </div>
       <div class="button-start text-center mt-3">
-        <nuxt-link to="/play/personal-test/questions">
+        <nuxt-link
+          :to="{
+            name: 'play-personal-test-questions',
+            params: { type: testType, basedOn: testBasedOn, chosen: chosen },
+          }"
+        >
           <b-button variant="primary"><p>Start</p></b-button>
         </nuxt-link>
       </div>
@@ -65,27 +70,28 @@ export default {
   },
   data() {
     return {
-      byVerse: true,
-      surah: true,
+      testType: "verse",
+      testBasedOn: "surah",
+      chosen: "",
     };
   },
   methods: {
     switchTestType(type) {
-      if (this.byVerse && type != "verse") {
-        this.byVerse = false;
-      } else if (!this.byVerse && type != "word") {
-        this.byVerse = true;
+      if (this.testType == "verse" && type != "verse") {
+        this.testType = "word";
+      } else if (this.testType == "word" && type != "word") {
+        this.testType = "verse";
       }
     },
     switchBasedType(type) {
-      if (this.surah && type != "surah") {
-        this.surah = false;
-      } else if (!this.surah && type != "juz") {
-        this.surah = true;
+      if (this.testBasedOn == "surah" && type != "surah") {
+        this.testBasedOn = "juz";
+      } else if (this.testBasedOn == "juz" && type != "juz") {
+        this.testBasedOn = "surah";
       }
     },
     simpleSuggestionList() {
-      if (this.surah) {
+      if (this.testBasedOn == "surah") {
         return [
           "Al-Faatihah",
           "Al-Baqarah",
