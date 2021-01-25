@@ -174,6 +174,7 @@ export default {};
   font-weight: 600;
   margin-top: 5px;
   margin-bottom: 0;
+  color: #848484;
 }
 
 .nav-text-active {
