@@ -3,9 +3,9 @@
     <div class="title pb-3">
       <div class="container">
         <h3>
-          <nuxt-link to="/play"
+          <nuxt-link to="/play/multiplayer"
             ><b-icon icon="chevron-left" class="mr-3"></b-icon></nuxt-link
-          >Personal Test
+          >Search Room
         </h3>
       </div>
     </div>
@@ -48,11 +48,15 @@
       <div class="button-start text-center mt-3">
         <nuxt-link
           :to="{
-            name: 'play-personal-test-questions',
-            params: { type: testType, basedOn: testBasedOn, chosen: chosen },
+            name: 'play-multiplayer-search-room-list-rooms',
+            params: {
+              type: testType,
+              basedOn: testBasedOn,
+              chosen: chosen,
+            },
           }"
         >
-          <b-button variant="primary"><p>Start</p></b-button>
+          <b-button variant="primary"><p>Search</p></b-button>
         </nuxt-link>
       </div>
     </div>
@@ -90,7 +94,7 @@ export default {
       }
     },
     simpleSuggestionList() {
-      if (this.testBasedOn == "surah") {
+      if (this.testBasedOn == "Surah") {
         return [
           "Al-Faatihah",
           "Al-Baqarah",
