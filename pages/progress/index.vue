@@ -1,6 +1,6 @@
 <template>
   <div class="pt-3 pb-5">
-    <div class="title pb-3 text-center">
+    <div class="progress-tile pb-3 text-center">
       <h3>Progress</h3>
     </div>
     <b-container>
@@ -37,8 +37,9 @@
             ></b-progress>
           </div>
           <hr />
-          <b-list-group v-for="surah in surahs" :key="surah.name">
+          <b-list-group v-for="(surah, index) in surahs" :key="surah.name">
             <b-list-group-item>
+              <section class="surah-number mr-2">{{ index }}</section>
               <nuxt-link
                 :to="{
                   name: 'surah',
@@ -71,7 +72,7 @@ export default {
 </script>
 
 <style>
-.title h3 {
+.progress-tile h3 {
   margin-bottom: 0;
   font-weight: 600;
 }
@@ -96,5 +97,10 @@ export default {
 
 .progress-header {
   font-weight: 600;
+}
+
+.surah-number {
+  width: 7px;
+  display: inline-block;
 }
 </style>
