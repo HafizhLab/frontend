@@ -90,7 +90,7 @@ export default {
       }
     },
     simpleSuggestionList() {
-      if (this.testBasedOn == "surah") {
+      if (this.testBasedOn == "Surah") {
         return [
           "Al-Faatihah",
           "Al-Baqarah",
