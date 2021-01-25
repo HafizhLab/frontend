@@ -1,16 +1,19 @@
 <template>
   <div>
     <Header />
+    <NavMenu />
     <nuxt />
   </div>
 </template>
 
 <script>
 import Header from "~/components/header.vue";
+import NavMenu from "~/components/navmenu.vue";
 
 export default {
   components: {
     Header,
+    NavMenu,
   },
 };
 </script>

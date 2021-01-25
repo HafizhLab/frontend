@@ -12,6 +12,15 @@
         />
         <h3 class="inline-block">HafizhLab</h3>
       </b-navbar-brand>
+      <b-navbar-nav class="ml-auto">
+        <img
+          src="~/assets/img/notification-solid-badged.png"
+          alt="NotificationsBadge"
+          class="inline-block"
+          width="33"
+          height="33"
+        />
+      </b-navbar-nav>
     </b-navbar>
   </div>
 </template>
