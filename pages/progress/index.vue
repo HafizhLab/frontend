@@ -39,13 +39,8 @@
           <hr />
           <b-list-group v-for="(surah, index) in surahs" :key="surah.name">
             <b-list-group-item>
-              <section class="surah-number mr-2">{{ index }}</section>
-              <nuxt-link
-                :to="{
-                  name: 'surah',
-                  params: { name: surah.name },
-                }"
-              >
+              <nuxt-link :to="`/surah/${surah.name}`" class="surah-list">
+                <section class="surah-number mr-2">{{ index }}</section>
                 {{ surah.name }}
               </nuxt-link>
             </b-list-group-item>
@@ -65,7 +60,11 @@ export default {
       memo_max: 114,
       test_value: 20,
       test_max: 114,
-      surahs: [{ name: "Al-Fatihah" }, { name: "Al-Baqarah" }],
+      surahs: [
+        { name: "Al-Fatihah" },
+        { name: "Al-Baqarah" },
+        { name: "Ali Imran" },
+      ],
     };
   },
 };
@@ -102,5 +101,9 @@ export default {
 .surah-number {
   width: 7px;
   display: inline-block;
+}
+
+.surah-list {
+  color: #000000;
 }
 </style>
