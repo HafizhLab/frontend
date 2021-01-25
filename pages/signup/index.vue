@@ -24,8 +24,8 @@
           </span>
         </div>
         <input
-          :type="email"
           v-model="email"
+          type="email"
           class="simple-form form-control border-left-0"
           placeholder="Email"
         />
@@ -37,8 +37,8 @@
           </span>
         </div>
         <input
-          :type="password"
           v-model="password"
+          type="password"
           class="simple-form form-control border-left-0"
           placeholder="Password"
         />
