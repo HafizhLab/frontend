@@ -1,5 +1,5 @@
 <template>
-  <b-container class="nav-container" fluid="xl">
+  <b-container class="nav-container" fluid>
     <b-row align-v="center" class="nav-items">
       <b-col class="text-center">
         <nuxt-link to="/">
