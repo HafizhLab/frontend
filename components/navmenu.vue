@@ -1,15 +1,15 @@
 <template>
-  <div class="nav-container">
-    <div class="nav-column">
-      <div class="nav-item home">
+  <b-container class="nav-container" fluid="xl">
+    <b-row align-v="center" class="nav-items">
+      <b-col class="text-center">
         <nuxt-link to="/">
-          <div v-if="$route.name === 'index'">
+          <div v-if="$route.name.startsWith('index')">
             <img
               src="~/assets/img/NavMenu/home_active.png"
               alt="HomeButton"
               class="inline-block"
               height="27"
-              width="28.6"
+              width="27"
             />
             <p class="nav-text nav-text-active">Home</p>
           </div>
@@ -19,15 +19,15 @@
               alt="HomeButton"
               class="inline-block"
               height="27"
-              width="28.6"
+              width="27"
             />
             <p class="nav-text">Home</p>
           </div>
         </nuxt-link>
-      </div>
+      </b-col>
 
-      <div class="nav-item challenges">
-        <nuxt-link to="#">
+      <b-col class="text-center">
+        <nuxt-link to="/challenge">
           <div v-if="$route.name.startsWith('challenge')">
             <img
               src="~/assets/img/NavMenu/challenges_active.png"
@@ -49,9 +49,9 @@
             <p class="nav-text">Challenges</p>
           </div>
         </nuxt-link>
-      </div>
+      </b-col>
 
-      <div class="nav-item play">
+      <b-col class="text-center">
         <nuxt-link to="/play">
           <div v-if="$route.name.startsWith('play')">
             <img
@@ -74,11 +74,11 @@
             <p class="nav-text">Play</p>
           </div>
         </nuxt-link>
-      </div>
+      </b-col>
 
-      <div class="nav-item memo">
-        <nuxt-link to="#">
-          <div v-if="$route.name.startsWith('mymemo')">
+      <b-col class="text-center">
+        <nuxt-link to="/progress">
+          <div v-if="$route.name.startsWith('progress')">
             <img
               src="~/assets/img/NavMenu/memo_active.png"
               alt="MyMemoButton"
@@ -86,23 +86,23 @@
               height="27"
               width="31.64"
             />
-            <p class="nav-text nav-text-active">My Memo</p>
+            <p class="nav-text nav-text-active">Progress</p>
           </div>
           <div v-else>
             <img
               src="~/assets/img/NavMenu/memo_default.png"
-              alt="MyMemoButton"
+              alt="ProgressButton"
               class="inline-block"
               height="27"
               width="31.64"
             />
-            <p class="nav-text">My Memo</p>
+            <p class="nav-text">Progress</p>
           </div>
         </nuxt-link>
-      </div>
+      </b-col>
 
-      <div class="nav-item profile">
-        <nuxt-link to="#">
+      <b-col class="text-center">
+        <nuxt-link to="/profile">
           <div v-if="$route.name.startsWith('profile')">
             <img
               src="~/assets/img/NavMenu/profile_active.png"
@@ -124,9 +124,9 @@
             <p class="nav-text">Profile</p>
           </div>
         </nuxt-link>
-      </div>
-    </div>
-  </div>
+      </b-col>
+    </b-row>
+  </b-container>
 </template>
 
 <script>
@@ -134,31 +134,46 @@ export default {};
 </script>
 
 <style scoped>
+@media (min-width: 320px) {
+  .nav-text {
+    font-size: 6px;
+  }
+}
+
+@media (min-width: 375px) {
+  .nav-text {
+    font-size: 8px;
+  }
+}
+
+@media (min-width: 425px) {
+  .nav-text {
+    font-size: 10px;
+  }
+}
+
+@media (min-width: 768px) {
+  .nav-text {
+    font-size: 13px;
+  }
+}
+
 .nav-container {
-  width: 100%;
   height: 60px;
   background-color: #ffffff;
   position: fixed;
   bottom: 0;
-  display: flex;
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.3);
 }
 
-.nav-column {
-  display: flex;
-  width: 95%; /* ini belum responsive */
-  height: 40px;
-  margin: auto;
-}
-
-.nav-item {
-  text-align: center;
-  margin-left: 20px;
+.nav-items {
+  min-height: 60px;
 }
 
 .nav-text {
   font-weight: 600;
   margin-top: 5px;
+  margin-bottom: 0;
 }
 
 .nav-text-active {
