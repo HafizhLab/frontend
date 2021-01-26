@@ -2,6 +2,7 @@
   <div class="pt-3 pb-5">
     <div class="title pb-3 text-center">
       <h3>Progress</h3>
+      <!--      <nuxt-link :to="`/progress/surah/${surah.name}`" class="surah-list">-->
     </div>
   </div>
 </template>

@@ -1,21 +1,21 @@
 <template>
   <div>
-    <b-row>
-      <b-col><h5 class="progress-header">Memorized</h5></b-col>
+    <b-row class="mb-2">
+      <b-col><h5 class="progress-header my-auto">Memorized</h5></b-col>
       <b-col>
-        <h5 class="progress-header text-right">
+        <h6 class="progress-header text-right my-auto">
           {{ memo_value }} / {{ memo_max }}
-        </h5>
+        </h6>
       </b-col>
     </b-row>
     <b-progress :value="memo_value" :max="memo_max" height="18px"></b-progress>
     <div class="mt-3 mb-4">
-      <b-row>
-        <b-col><h5 class="progress-header">Tested</h5></b-col>
+      <b-row class="mb-2">
+        <b-col><h5 class="progress-header my-auto">Tested</h5></b-col>
         <b-col>
-          <h5 class="progress-header text-right">
+          <h6 class="progress-header text-right my-auto">
             {{ test_value }} / {{ test_max }}
-          </h5>
+          </h6>
         </b-col>
       </b-row>
       <b-progress
@@ -44,7 +44,7 @@
             :key="surah.name"
             class="my-auto ml-2"
           >
-            <nuxt-link :to="`/surah/${surah.name}`" class="surah-list">
+            <nuxt-link :to="`/progress/surah/${surah.name}`" class="surah-list">
               {{ surah.name }}
               <b-badge variant="primary" pill>{{ surah.ayat }}</b-badge>
             </nuxt-link>
