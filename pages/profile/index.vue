@@ -1,13 +1,13 @@
 <template>
   <div class="m-0 p-0">
-    <div class="profile pb-4 m-0">
-      <div class="row text-center title pt-3">
+    <div class="profile pb-4">
+      <div class="row text-center title pt-3 m-0">
         <p class="w-100">Profile</p>
       </div>
       <div class="row profile-image w-100 mb-3">
         <img src="~/assets/img/dummy-user.png" />
       </div>
-      <div class="row profile-info mb-3">
+      <div class="row profile-info mb-3 m-0">
         <p class="name">Lulu Ilmaknun</p>
         <p class="email">lulu@mail.com</p>
       </div>
