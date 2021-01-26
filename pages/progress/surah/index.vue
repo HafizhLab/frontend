@@ -2,7 +2,7 @@
   <div class="pt-3 pb-5">
     <div class="memo-surah-title pb-3">
       <h4 class="ml-4 my-0">
-        <nuxt-link :to="`/progress`">
+        <nuxt-link to="/progress">
           <img
             src="~/assets/img/ic_back.png"
             alt=""
@@ -11,7 +11,7 @@
             width="8.7"
           />
         </nuxt-link>
-        Al-Fatihah
+        {{ surah.name }}
       </h4>
     </div>
     <b-container>
@@ -44,18 +44,18 @@
         ></b-progress>
       </div>
       <hr />
-      <p>
-        \ufeff\u0628\u0650\u0633\u0652\u0645\u0650
-        \u0627\u0644\u0644\u0651\u064e\u0647\u0650
-        \u0627\u0644\u0631\u0651\u064e\u062d\u0652
-        \u0645\u064e\u0670\u0646\u0650\u0627\u0644
-        \u0631\u0651\u064e\u062d\u0650\u064a\u0645\u0650
-      </p>
+      <b-list-group v-for="ayat in ayatData" :key="ayat">
+        <b-list-group-item class="text-right ayat-items">
+          {{ ayat }}
+        </b-list-group-item>
+      </b-list-group>
     </b-container>
   </div>
 </template>
 
 <script>
+import Dummy from "~/static/Albaqarah.json";
+
 export default {
   data() {
     return {
@@ -63,7 +63,26 @@ export default {
       memo_max: 7,
       test_value: 5,
       test_max: 7,
+      surah: null,
+      ayatData: null,
     };
+  },
+  created() {
+    this.surah = {
+      name: this.$route.params.name,
+    };
+    this.ayatData = this.getAyat();
+  },
+  methods: {
+    getAyat() {
+      const surah = this.surah;
+      const surahData = Dummy.data[0].ayahs.filter(function (ayat) {
+        return ayat.surah === surah.name;
+      });
+      return surahData.map(function (ayat) {
+        return ayat.text;
+      });
+    },
   },
 };
 </script>
@@ -71,5 +90,8 @@ export default {
 <style>
 .memo-surah-title h4 {
   font-weight: 600;
+}
+.ayat-items {
+  border-width: 0 0 1px 0;
 }
 </style>

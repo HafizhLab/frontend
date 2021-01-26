@@ -44,7 +44,13 @@
             :key="surah.name"
             class="my-auto ml-2"
           >
-            <nuxt-link :to="`/progress/surah/${surah.name}`" class="surah-list">
+            <nuxt-link
+              :to="{
+                name: 'progress-surah',
+                params: { name: surah.name },
+              }"
+              class="surah-list"
+            >
               {{ surah.name }}
               <b-badge variant="primary" pill>{{ surah.ayat }}</b-badge>
             </nuxt-link>
@@ -67,20 +73,13 @@ export default {
         {
           name: "Juz 1",
           surahs: [
-            { name: "Al-Fatihah", ayat: "1-7" },
-            { name: "Al-Baqarah", ayat: "1-141" },
+            { name: "Al-Faatiha", ayat: "1-7" },
+            { name: "Al-Baqara", ayat: "1-141" },
           ],
         },
         {
           name: "Juz 2",
-          surahs: [{ name: "Al-Baqarah", ayat: "142-252" }],
-        },
-        {
-          name: "Juz 3",
-          surahs: [
-            { name: "Al-Baqarah", ayat: "253-286" },
-            { name: "Ali Imran", ayat: "1-92" },
-          ],
+          surahs: [{ name: "Al-Baqara", ayat: "142-252" }],
         },
       ],
     };
