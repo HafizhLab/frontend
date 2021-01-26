@@ -174,8 +174,11 @@ export default {
       return options;
     },
     handleAnswerClick(isCorrect, index) {
-      if (this.showResult) return;
+      if (this.showResult) return; // prevent user clicked button when state is showing result
+
       clearTimeout(this.timer);
+
+      // handling if time is out and user not answered
       if (this.countDown > 0) {
         this.currentQuestion.options[index].selected = true;
       }
@@ -190,8 +193,12 @@ export default {
           this.countDown = this.maxTime;
           this.countDownTimer();
         } else {
-          console.log("Done!");
-          return;
+          this.$router.push({
+            name: "play-personal-test-result",
+            params: {
+              score: this.score,
+            },
+          });
         }
         this.showResult = false;
       }, 2000);
