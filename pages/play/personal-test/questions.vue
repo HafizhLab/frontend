@@ -97,7 +97,7 @@
 </template>
 
 <script>
-import Dummy from "~/static/Albaqarah.json";
+import Dummy from "~/assets/Albaqarah.json";
 
 export default {
   data() {
