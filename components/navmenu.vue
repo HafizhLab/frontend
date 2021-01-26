@@ -77,7 +77,7 @@
       </b-col>
 
       <b-col class="text-center">
-        <nuxt-link to="/progress">
+        <nuxt-link to="/progress/surah">
           <div v-if="$route.name.startsWith('progress')">
             <img
               src="~/assets/img/NavMenu/memo_active.png"

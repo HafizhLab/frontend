@@ -1,97 +1,190 @@
 <template>
-  <div class="pt-3 pb-5">
-    <div class="memo-surah-title pb-3">
-      <h4 class="ml-4 my-0">
-        <nuxt-link to="/progress">
-          <img
-            src="~/assets/img/ic_back.png"
-            alt=""
-            class="inline-block mr-2"
-            height="15"
-            width="8.7"
-          />
-        </nuxt-link>
-        {{ surah.name }}
-      </h4>
-    </div>
-    <b-container>
-      <b-row class="mb-2">
-        <b-col><h5 class="progress-header my-auto">Memorized</h5></b-col>
-        <b-col>
-          <h6 class="progress-header text-right my-auto">
-            {{ memo_value }} / {{ memo_max }}
-          </h6>
-        </b-col>
-      </b-row>
-      <b-progress
-        :value="memo_value"
-        :max="memo_max"
-        height="18px"
-      ></b-progress>
-      <div class="mt-3 mb-4">
+  <div>
+    <div class="pt-3 pb-5">
+      <div class="progress-tile pb-3 text-center">
+        <h3>Progress</h3>
+      </div>
+      <b-container class="mb-3">
+        <b-button-group>
+          <nuxt-link to="/progress/surah">
+            <b-button class="progress-tabs-active">Surah</b-button>
+          </nuxt-link>
+          <nuxt-link to="/progress/juz">
+            <b-button class="progress-tabs">Juz</b-button>
+          </nuxt-link>
+        </b-button-group>
+      </b-container>
+      <b-container>
         <b-row class="mb-2">
-          <b-col><h5 class="progress-header my-auto">Tested</h5></b-col>
+          <b-col><h5 class="progress-header my-auto">Memorized</h5></b-col>
           <b-col>
             <h6 class="progress-header text-right my-auto">
-              {{ test_value }} / {{ test_max }}
+              {{ memo_value }} / {{ max }}
             </h6>
           </b-col>
         </b-row>
         <b-progress
-          :value="test_value"
-          :max="test_max"
+          :value="memo_value"
+          :max="max"
           height="18px"
-        ></b-progress>
-      </div>
-      <hr />
-      <b-list-group v-for="ayat in ayatData" :key="ayat">
-        <b-list-group-item class="text-right ayat-items">
-          {{ ayat }}
-        </b-list-group-item>
-      </b-list-group>
-    </b-container>
+          class="memo-progress-bar"
+        >
+        </b-progress>
+        <div class="mt-3 mb-4">
+          <b-row class="mb-2">
+            <b-col><h5 class="progress-header my-auto">Tested</h5></b-col>
+            <b-col>
+              <h6 class="progress-header text-right my-auto">
+                {{ test_value }} / {{ max }}
+              </h6>
+            </b-col>
+          </b-row>
+          <b-progress
+            :value="test_value"
+            :max="max"
+            height="18px"
+            class="test-progress-bar"
+          ></b-progress>
+        </div>
+        <hr />
+        <b-list-group v-for="(surah, index) in surahs" :key="surah.name">
+          <b-list-group-item>
+            <b-row align-v="center">
+              <b-col cols="10">
+                <nuxt-link
+                  :to="`/progress/surah/${surah.name}`"
+                  class="surah-list"
+                >
+                  <section class="surah-number mr-2">{{ index }}</section>
+                  {{ surah.name }}
+                </nuxt-link>
+              </b-col>
+              <b-col class="text-right">
+                <b-button disabled class="btn-circle memo-circle">
+                  {{ Math.round((surah.memo / surah.max) * 100 * 10) / 10 }}%
+                </b-button>
+                <b-button disabled class="btn-circle test-circle">
+                  {{ Math.round((surah.test / surah.max) * 100 * 10) / 10 }}%
+                </b-button>
+              </b-col>
+            </b-row>
+          </b-list-group-item>
+        </b-list-group>
+      </b-container>
+    </div>
   </div>
 </template>
 
 <script>
-import Dummy from "~/static/Albaqarah.json";
-
 export default {
   data() {
     return {
-      memo_value: 7,
-      memo_max: 7,
-      test_value: 5,
-      test_max: 7,
-      surah: null,
-      ayatData: null,
+      memo_value: 38,
+      test_value: 20,
+      max: 114,
+      surahs: [
+        { name: "Al-Faatiha", max: 7, memo: 7, test: 5 },
+        { name: "Al-Baqara", max: 286, memo: 50, test: 20 },
+      ],
     };
-  },
-  created() {
-    this.surah = {
-      name: this.$route.params.name,
-    };
-    this.ayatData = this.getAyat();
-  },
-  methods: {
-    getAyat() {
-      const surah = this.surah;
-      const surahData = Dummy.data[0].ayahs.filter(function (ayat) {
-        return ayat.surah === surah.name;
-      });
-      return surahData.map(function (ayat) {
-        return ayat.text;
-      });
-    },
   },
 };
 </script>
 
 <style>
-.memo-surah-title h4 {
+.progress-tile h3 {
+  margin-bottom: 0;
   font-weight: 600;
 }
-.ayat-items {
-  border-width: 0 0 1px 0;
+
+.progress-tabs,
+.progress-tabs-active {
+  background-color: #ffffff;
+  border: 0;
+}
+
+.progress-tabs:hover,
+.progress-tabs-active:hover,
+.progress-tabs:focus,
+.progress-tabs-active:focus,
+.progress-tabs:active,
+.progress-tabs-active:active,
+.progress-tabs:active:hover,
+.progress-tabs-active:active:hover,
+.progress-tabs:active:focus,
+.progress-tabs-active:active:focus {
+  background-color: #ffffff;
+  color: #49c0db;
+}
+
+.progress-tabs {
+  color: #000000;
+  font-weight: 500;
+}
+
+.progress-tabs-active {
+  color: #49c0db;
+  font-weight: 700;
+  border-bottom: 2px solid #49c0db;
+  border-radius: 0;
+}
+
+.memo-progress-bar .progress-bar {
+  background-color: #49c0db;
+}
+
+.test-progress-bar .progress-bar {
+  background-color: #359d9e;
+}
+
+.progress {
+  border-radius: 20px;
+}
+
+.progress-header {
+  font-weight: 600;
+}
+
+.surah-number {
+  width: 7px;
+  display: inline-block;
+}
+
+.surah-list,
+.juz-list {
+  color: #000000;
+}
+
+.icon-dots {
+  background-color: #ffffff;
+  color: #aaaaaa;
+  border: 1px solid #aaaaaa;
+}
+
+.btn-circle {
+  width: 30px;
+  height: 30px;
+  padding: 6px 0;
+  border-radius: 15px;
+  text-align: center;
+  font-size: 10px;
+  line-height: 1.42857;
+}
+
+.btn-secondary.disabled.memo-circle {
+  background-color: #49c0db;
+  color: #ffffff;
+  border: 0;
+}
+
+.btn-secondary.disabled.test-circle {
+  background-color: #359d9e;
+  color: #ffffff;
+  border: 0;
+}
+
+.btn.disabled,
+.btn:disabled {
+  opacity: 1;
 }
 </style>
