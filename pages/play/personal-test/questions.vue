@@ -1,13 +1,201 @@
 <template>
-  <div class="container text-center mt-3">
-    <h3>Test Type: {{ $route.params.type }}</h3>
-    <h3>Test Based On: {{ $route.params.basedOn }}</h3>
-    <h3>Chosen: {{ $route.params.chosen }}</h3>
+  <div class="pt-3 pb-5 container">
+    <div class="title-sm pb-3">
+      <h5>
+        <nuxt-link to="/play/personal-test">
+          <b-icon icon="chevron-left" class="mr-2"></b-icon>
+        </nuxt-link>
+        Personal Test
+      </h5>
+    </div>
+    <div class="timer">
+      <b-progress :max="10" height="2rem">
+        <b-progress-bar :value="countDown">
+          <span
+            ><b-icon icon="clock" class="mr-2"></b-icon
+            >{{ countDown }} sec</span
+          >
+        </b-progress-bar>
+      </b-progress>
+    </div>
+    <div class="questions-label mt-3">
+      <h3>
+        Question {{ questionNumber }} <span style="font-size: 1.3rem">/10</span>
+      </h3>
+    </div>
+    <div class="main mt-3 pt-4 pb-3 container">
+      <h5>
+        <strong>{{ surah }}</strong>
+      </h5>
+      <div class="question-section pt-3 pb-3">
+        <h3>{{ currentQuestion.text }}</h3>
+      </div>
+      <div class="answer-section">
+        <b-button
+          v-for="(option, index) in currentQuestion.options"
+          :key="index"
+          class="ans-option-btn"
+          variant="primary"
+        >
+          <div class="row">
+            <div class="col-2 icon-ans">
+              <b-icon icon="circle"></b-icon>
+            </div>
+            <div class="col-10 text-ans">{{ option.text }}</div>
+          </div>
+        </b-button>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
-export default {};
+import Dummy from "~/static/Albaqarah.json";
+
+export default {
+  data() {
+    return {
+      timer: null,
+      countDown: 5,
+      questionNumber: 1,
+      currentQuestion: null,
+      juzData: null,
+      surah: null,
+    };
+  },
+  created() {
+    // this.countDownTimer();
+    this.juzData = Dummy.data[0].ayahs;
+    this.surah = this.$route.params.chosen;
+    this.currentQuestion = this.getQuestion();
+  },
+  methods: {
+    countDownTimer() {
+      if (this.countDown > 0) {
+        this.timer = setTimeout(() => {
+          this.countDown -= 1;
+          this.countDownTimer();
+        }, 1000);
+      }
+    },
+    getQuestion() {
+      var currentAyah = Math.floor(Math.random() * this.juzData.length - 1);
+      var question = {
+        text: this.juzData[currentAyah].text,
+        options: this.getOption(currentAyah),
+      };
+      return question;
+    },
+    getOption(currentAyah) {
+      var arrNum = [
+        currentAyah + 1,
+        currentAyah + 2,
+        currentAyah + 3,
+        currentAyah + 4,
+      ];
+      var currentIndex = arrNum.length,
+        temporaryValue,
+        randomIndex;
+
+      // While there remain elements to shuffle...
+      while (0 !== currentIndex) {
+        // Pick a remaining element...
+        randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex -= 1;
+
+        // And swap it with the current element.
+        temporaryValue = arrNum[currentIndex];
+        arrNum[currentIndex] = arrNum[randomIndex];
+        arrNum[randomIndex] = temporaryValue;
+      }
+
+      var options = [];
+      arrNum.forEach((num) => {
+        var option = {
+          text: this.juzData[num].text,
+          isCorrent: false,
+        };
+        if (num - currentAyah == 1) option.isCorrent = true;
+        options.push(option);
+      });
+      return options;
+    },
+  },
+};
 </script>
 
-<style></style>
+<style>
+.title-sm h5 {
+  margin-bottom: 0;
+  font-weight: 600;
+}
+
+.timer .progress {
+  background-color: #216170;
+  border-radius: 2rem;
+  text-align: right;
+  padding: 2px;
+}
+
+.timer .progress span {
+  font-size: 1rem;
+  margin-left: 1.5rem;
+}
+
+.timer .progress-bar {
+  background-color: #49c0db;
+  border-radius: 2rem;
+}
+
+.timer .progress-bar span {
+  font-size: 1rem;
+  text-align: left;
+  margin-left: 1.5rem;
+}
+
+.main {
+  border: 1px solid #c1c1c1;
+  border-radius: 2rem;
+}
+
+.ans-option-btn {
+  border-radius: 1rem;
+  padding: 1rem;
+  min-width: 50%;
+  font-size: 1.75rem;
+  line-height: 1.7;
+  color: black;
+  align-items: center;
+  cursor: pointer;
+  margin-bottom: 5px;
+  text-align: right;
+  font-family: "Kitab";
+  background-color: white;
+  border: 1px solid#C1C1C1;
+}
+
+.ans-option-btn:hover {
+  background-color: #49c0db;
+  border: 1px solid #49c0db;
+}
+
+.answer-section {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.question-section {
+  line-height: 1.7;
+  text-align: right;
+  font-family: "Kitab";
+}
+
+.icon-ans {
+  display: flex;
+  text-align: left;
+  font-size: 1.2rem;
+  align-items: center;
+}
+</style>
