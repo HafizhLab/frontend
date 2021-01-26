@@ -37,15 +37,16 @@
         ></b-progress>
       </div>
       <b-container class="text-center">
-        <b-button v-b-modal.modal-1>Mark Memorized Verses</b-button>
-
+        <b-button v-b-modal.modal-1 class="memorize-button" size="lg">
+          Mark Memorized Verses
+        </b-button>
         <b-modal id="modal-1" title="Mark Memorized Verses">
           <b-dropdown id="dropdown-1" text="From" class="m-md-2">
             <b-dropdown-item v-for="(ayat, index) in ayatData" :key="ayat">
               {{ index + 1 }}
             </b-dropdown-item>
           </b-dropdown>
-          <b-dropdown id="dropdown-1" text="To" class="m-md-2">
+          <b-dropdown id="dropdown-2" text="To" class="m-md-2">
             <b-dropdown-item v-for="(ayat, index) in ayatData" :key="ayat">
               {{ index + 1 }}
             </b-dropdown-item>
@@ -174,5 +175,11 @@ export default {
   background-color: #49c0db;
   color: #ffffff;
   border-color: #ffffff;
+}
+
+.memorize-button {
+  background-color: #5ec699;
+  border-radius: 15px;
+  border: 0;
 }
 </style>
