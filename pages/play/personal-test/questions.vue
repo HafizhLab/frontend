@@ -9,7 +9,7 @@
       </h5>
     </div>
     <div class="timer">
-      <b-progress :max="10" height="2rem">
+      <b-progress :max="maxTime" height="2rem">
         <b-progress-bar :value="countDown">
           <span
             ><b-icon icon="clock" class="mr-2"></b-icon
@@ -30,18 +30,65 @@
       <div class="question-section pt-3 pb-3">
         <h3>{{ currentQuestion.text }}</h3>
       </div>
-      <div class="answer-section">
+      <div v-if="showResult" class="answer-section">
+        <div v-for="(option, index) in currentQuestion.options" :key="index">
+          <b-button
+            v-if="option.isCorrect"
+            id="correct-ans"
+            class="ans-option-btn"
+            variant="primary"
+          >
+            <div class="row">
+              <div class="col-2 icon-ans">
+                <b-icon id="green-color" icon="check-circle-fill"></b-icon>
+              </div>
+              <div class="col-10 text-ans">
+                {{ option.text }}
+              </div>
+            </div>
+          </b-button>
+          <b-button
+            v-else-if="!option.isCorrect && option.selected"
+            id="wrong-ans"
+            class="ans-option-btn"
+            variant="primary"
+          >
+            <div class="row">
+              <div class="col-2 icon-ans">
+                <b-icon id="red-color" icon="x-circle-fill"></b-icon>
+              </div>
+              <div class="col-10 text-ans">
+                {{ option.text }}
+              </div>
+            </div>
+          </b-button>
+          <b-button v-else class="ans-option-btn" variant="primary">
+            <div class="row">
+              <div class="col-2 icon-ans">
+                <b-icon icon="circle"></b-icon>
+              </div>
+              <div class="col-10 text-ans">
+                {{ option.text }}
+              </div>
+            </div>
+          </b-button>
+        </div>
+      </div>
+      <div v-else class="answer-section">
         <b-button
           v-for="(option, index) in currentQuestion.options"
           :key="index"
           class="ans-option-btn"
           variant="primary"
+          @click="handleAnswerClick(option.isCorrect, index)"
         >
           <div class="row">
             <div class="col-2 icon-ans">
               <b-icon icon="circle"></b-icon>
             </div>
-            <div class="col-10 text-ans">{{ option.text }}</div>
+            <div class="col-10 text-ans">
+              {{ option.text }}
+            </div>
           </div>
         </b-button>
       </div>
@@ -56,18 +103,21 @@ export default {
   data() {
     return {
       timer: null,
-      countDown: 5,
+      maxTime: 25,
+      countDown: 25,
       questionNumber: 1,
       currentQuestion: null,
       juzData: null,
       surah: null,
+      showResult: false,
+      score: 0,
     };
   },
   created() {
-    // this.countDownTimer();
     this.juzData = Dummy.data[0].ayahs;
     this.surah = this.$route.params.chosen;
     this.currentQuestion = this.getQuestion();
+    this.countDownTimer();
   },
   methods: {
     countDownTimer() {
@@ -76,6 +126,8 @@ export default {
           this.countDown -= 1;
           this.countDownTimer();
         }, 1000);
+      } else {
+        this.handleAnswerClick(false);
       }
     },
     getQuestion() {
@@ -113,12 +165,36 @@ export default {
       arrNum.forEach((num) => {
         var option = {
           text: this.juzData[num].text,
-          isCorrent: false,
+          isCorrect: false,
+          selected: false,
         };
-        if (num - currentAyah == 1) option.isCorrent = true;
+        if (num - currentAyah == 1) option.isCorrect = true;
         options.push(option);
       });
       return options;
+    },
+    handleAnswerClick(isCorrect, index) {
+      if (this.showResult) return;
+      clearTimeout(this.timer);
+      if (this.countDown > 0) {
+        this.currentQuestion.options[index].selected = true;
+      }
+      if (isCorrect) {
+        this.score++;
+      }
+      this.showResult = true;
+      setTimeout(() => {
+        if (this.questionNumber + 1 <= 10) {
+          this.questionNumber++;
+          this.currentQuestion = this.getQuestion();
+          this.countDown = this.maxTime;
+          this.countDownTimer();
+        } else {
+          console.log("Done!");
+          return;
+        }
+        this.showResult = false;
+      }, 2000);
     },
   },
 };
@@ -172,6 +248,7 @@ export default {
   font-family: "Kitab";
   background-color: white;
   border: 1px solid#C1C1C1;
+  width: 100%;
 }
 
 .ans-option-btn:hover {
@@ -197,5 +274,47 @@ export default {
   text-align: left;
   font-size: 1.2rem;
   align-items: center;
+}
+
+#correct-ans {
+  border-radius: 1rem;
+  padding: 1rem;
+  min-width: 50%;
+  font-size: 1.75rem;
+  line-height: 1.7;
+  color: black;
+  align-items: center;
+  cursor: pointer;
+  margin-bottom: 5px;
+  text-align: right;
+  font-family: "Kitab";
+  background-color: #f0f9ee;
+  border: 1px solid#6AC259;
+  width: 100%;
+}
+
+#green-color {
+  color: #6ac259;
+}
+
+#wrong-ans {
+  border-radius: 1rem;
+  padding: 1rem;
+  min-width: 50%;
+  font-size: 1.75rem;
+  line-height: 1.7;
+  color: black;
+  align-items: center;
+  cursor: pointer;
+  margin-bottom: 5px;
+  text-align: right;
+  font-family: "Kitab";
+  background-color: #fdeaea;
+  border: 1px solid#E92E30;
+  width: 100%;
+}
+
+#red-color {
+  color: #e92e30;
 }
 </style>
