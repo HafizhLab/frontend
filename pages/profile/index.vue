@@ -1,6 +1,6 @@
 <template>
-  <div class="col m-0 p-0">
-    <div class="profile pb-4">
+  <div class="m-0 p-0">
+    <div class="profile pb-4 m-0">
       <div class="row text-center title pt-3">
         <p class="w-100">Profile</p>
       </div>
