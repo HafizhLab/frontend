@@ -25,6 +25,6 @@ module.exports = {
     },
     // add your custom rules here
     rules: {
-        parser: "babel-eslint"
+        "no-console": "off"
     }
 }
