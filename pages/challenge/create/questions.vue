@@ -313,6 +313,10 @@ export default {
   border: 1px solid #6ac259;
 }
 
+.modal-open {
+  padding-right: 0px !important;
+}
+
 .modal-open .modal-dialog {
   padding: 5%;
   border-radius: 50px;
@@ -329,7 +333,7 @@ export default {
 }
 
 .modal-body {
-  overflow-y: scroll;
+  overflow-y: auto;
 }
 
 .modal-body ul {
