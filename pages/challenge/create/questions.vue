@@ -8,12 +8,7 @@
         {{ name }}
       </h5>
     </div>
-    <h5 v-if="basedOn == 'Surah'" style="margin-left: 2.5rem">
-      By {{ type }} : {{ chosen }}
-    </h5>
-    <h5 v-else-if="basedOn == 'Juz'" style="margin-left: 2.5rem">
-      By {{ type }} : Juz {{ chosen }}
-    </h5>
+    <h5 style="margin-left: 2.5rem">By {{ type }} : {{ chosen }}</h5>
     <div class="questions-label mt-5">
       <h3 class="text-center">
         <b-icon
@@ -32,20 +27,23 @@
     </div>
     <div class="main mt-3 pt-4 pb-3 container">
       <div v-if="currentQuestion" class="question-section py-3 font-kitab">
-        <h3>{{ currentQuestion.text }}</h3>
+        <b-icon icon="pencil-square" @click="showModal('select-questions')">
+        </b-icon>
+        <span>{{ currentQuestion.text }}</span>
       </div>
       <div v-else class="question-section text-center py-5">
-        <h5 class="font-weight-bold" @click="selectQuestion()">
+        <h5 class="font-weight-bold" @click="showModal('select-questions')">
           Select Question Verse
         </h5>
       </div>
       <div v-if="currentQuestion" class="answer-section">
+        <p class="text-right">Generate Options</p>
         <b-button
           v-for="(option, index) in currentQuestion.options"
           :key="index"
           class="ans-option-btn"
           variant="primary"
-          @click="chooseAnswer()"
+          @click="showModal('select-options')"
         >
           <div class="row">
             <div class="col-2 icon-ans">
@@ -66,7 +64,7 @@
           :key="index"
           class="ans-option-btn"
           variant="primary"
-          @click="chooseAnswer()"
+          @click="showModal('select-options')"
         >
           <div class="row">
             <div class="col-2 icon-ans">
@@ -77,6 +75,30 @@
         </b-button>
       </div>
     </div>
+    <b-modal
+      ref="select-questions"
+      height="100"
+      hide-footer="true"
+      title="Choose question"
+    >
+      <ul>
+        <li v-for="item in data" :key="item.name" @click="selectQuestion(item)">
+          ({{ item.number }}) {{ item.text }}
+        </li>
+      </ul>
+    </b-modal>
+    <b-modal
+      ref="select-options"
+      height="100"
+      hide-footer="true"
+      title="Choose options"
+    >
+      <ul>
+        <li v-for="item in data" :key="item.name" @click="selectOptions(item)">
+          ({{ item.number }}) {{ item.text }}
+        </li>
+      </ul>
+    </b-modal>
   </div>
 </template>
 
@@ -93,8 +115,7 @@ export default {
       questionNumber: 1,
       currentQuestion: null,
       currentOptions: null,
-      juzData: null,
-      surah: null,
+      data: null,
       questions: [
         {
           id: 0,
@@ -105,21 +126,25 @@ export default {
     };
   },
   created() {
-    this.juzData = Dummy.data[0].ayahs;
+    this.data = Dummy.data[0].ayahs;
     this.chosen = this.$route.params.chosen;
     this.name = this.$route.params.name;
     this.type = this.$route.params.type;
     this.basedOn = this.$route.params.basedOn;
   },
   methods: {
-    selectQuestion() {
-      return;
+    showModal(name) {
+      this.$refs[name].show();
     },
-    selectOption() {
-      return;
+    selectQuestion(item) {
+      this.currentQuestion = item;
+      this.questions[this.questionNumber - 1] = item;
+      this.$refs["select-questions"].hide();
     },
-    chooseAnswer() {
-      return;
+    selectOption(item) {
+      this.currentQuestion = item;
+      this.questions[this.questionNumber - 1] = item;
+      this.$refs["select-options"].hide();
     },
     changeQuestion(questionNumber) {
       var question_id = questionNumber - 1;
@@ -183,12 +208,19 @@ export default {
   justify-content: space-between;
 }
 
+.answer-section p {
+  font-size: 8pt;
+  font-weight: 700;
+}
+
 .question-section {
   line-height: 1.7;
   text-align: right;
 }
 
+.answer-section p:hover,
 .question-section h5:hover,
+.question-section .b-icon:hover,
 .questions-label .b-icon:hover {
   cursor: pointer;
   color: #848484;
@@ -218,5 +250,48 @@ export default {
 
 #green-color {
   color: #6ac259;
+}
+
+#select-clicked {
+  color: white;
+  background: #49c0db;
+}
+
+.modal-open .modal-dialog {
+  padding: 5%;
+  border-radius: 50px;
+  height: 100%;
+  margin: auto;
+  display: flex;
+}
+
+.modal-content {
+  margin: auto;
+  min-height: fit-content;
+  max-height: 80%;
+  border-radius: 15px;
+}
+
+.modal-body {
+  overflow-y: scroll;
+}
+
+.modal-body ul {
+  list-style: none;
+  padding: 0;
+}
+
+.modal-body li {
+  font-size: 13pt;
+  text-align: right;
+  font-family: "Kitab";
+  padding: 0.75rem 0.75rem;
+  border-bottom: 1px solid #ededeb;
+  cursor: pointer;
+}
+
+.modal-body li:hover {
+  color: white;
+  background: #49c0db;
 }
 </style>
