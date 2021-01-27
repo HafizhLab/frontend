@@ -27,50 +27,26 @@
     </div>
     <div class="main mt-3 pt-4 pb-3 container">
       <div v-if="currentQuestion" class="question-section py-3 font-kitab">
-        <b-icon icon="pencil-square" @click="showModal('select-questions')">
-        </b-icon>
+        <b-icon icon="pencil-square" @click="showModalQuestions()"></b-icon>
         <span>{{ currentQuestion.text }}</span>
+        <p class="text-right">Generate Options</p>
       </div>
       <div v-else class="question-section text-center py-5">
-        <h5 class="font-weight-bold" @click="showModal('select-questions')">
+        <h5 class="font-weight-bold" @click="showModalQuestions()">
           Select Question Verse
         </h5>
       </div>
-      <div v-if="currentQuestion" class="answer-section">
-        <p class="text-right">Generate Options</p>
-        <b-button
-          v-for="(option, index) in currentQuestion.options"
-          :key="index"
-          class="ans-option-btn"
-          variant="primary"
-          @click="showModal('select-options')"
-        >
+      <div class="answer-section">
+        <b-button v-for="index in 4" :key="index" class="ans-option-btn">
           <div class="row">
             <div class="col-2 icon-ans">
               <b-icon icon="circle"></b-icon>
+              <b-icon icon="pencil-square" @click="showModalOptions(index)">
+              </b-icon>
             </div>
-            <div v-if="option.text" class="col-10 text-ans font-kitab">
-              {{ option.text }}
-            </div>
-            <div v-else class="col-10 text-ans text-left no-option">
+            <div ref="option-text" class="col-10 text-ans no-option">
               Edit option
             </div>
-          </div>
-        </b-button>
-      </div>
-      <div else class="answer-section">
-        <b-button
-          v-for="index in 4"
-          :key="index"
-          class="ans-option-btn"
-          variant="primary"
-          @click="showModal('select-options')"
-        >
-          <div class="row">
-            <div class="col-2 icon-ans">
-              <b-icon icon="circle"></b-icon>
-            </div>
-            <div class="col-10 text-ans text-left no-option">Edit option</div>
           </div>
         </b-button>
       </div>
@@ -113,14 +89,16 @@ export default {
       basedOn: "",
       chosen: "",
       questionNumber: 1,
+      optionId: 1,
       currentQuestion: null,
-      currentOptions: null,
+      currentOptions: [null, null, null, null],
+      optionText: "",
       data: null,
       questions: [
         {
           id: 0,
           question: null,
-          options: null,
+          options: [null, null, null, null],
         },
       ],
     };
@@ -133,19 +111,28 @@ export default {
     this.basedOn = this.$route.params.basedOn;
   },
   methods: {
-    showModal(name) {
-      this.$refs[name].show();
+    showModalQuestions() {
+      this.$refs["select-questions"].show();
+    },
+    showModalOptions(index) {
+      this.optionId = index - 1;
+      this.$refs["select-options"].show();
     },
     selectQuestion(item) {
       this.currentQuestion = item;
-      this.questions[this.questionNumber - 1] = item;
+      this.questions[this.questionNumber - 1].question = item;
       this.$refs["select-questions"].hide();
     },
-    selectOption(item) {
-      this.currentQuestion = item;
-      this.questions[this.questionNumber - 1] = item;
+    selectOptions(item) {
+      this.currentOptions[this.optionId] = item;
+      this.questions[this.questionNumber - 1].options[this.optionId] = item;
+      this.$refs["option-text"][this.optionId].innerText = item.text;
+      this.$refs["option-text"][this.optionId].classList.add("font-kitab");
       this.$refs["select-options"].hide();
     },
+    // chooseAnswer(index) {
+    //   this.questions[this.questionNumber - 1].options[index].isCorrect = true;
+    // },
     changeQuestion(questionNumber) {
       var question_id = questionNumber - 1;
       this.questionNumber = questionNumber;
@@ -154,11 +141,22 @@ export default {
           this.questions[question_id] = {
             id: question_id,
             question: null,
-            options: null,
+            options: [null, null, null, null],
           };
         }
         this.currentQuestion = this.questions[question_id].question;
         this.currentOptions = this.questions[question_id].options;
+
+        for (var i = 0; i < 4; i++) {
+          var option = this.currentOptions[i];
+          if (option) {
+            this.$refs["option-text"][i].innerText = option.text;
+            this.$refs["option-text"][i].classList.add("font-kitab");
+          } else {
+            this.$refs["option-text"][i].innerText = "Edit option";
+            this.$refs["option-text"][i].classList.remove("font-kitab");
+          }
+        }
       }
     },
   },
@@ -169,6 +167,11 @@ export default {
 .font-kitab {
   font-family: "Kitab";
   font-size: 1.75rem;
+  text-align: right !important;
+}
+
+.no-option {
+  text-align: left;
 }
 
 .title-sm h5 {
@@ -208,9 +211,8 @@ export default {
   justify-content: space-between;
 }
 
-.answer-section p {
-  font-size: 8pt;
-  font-weight: 700;
+.answer-section .b-icon {
+  margin-left: 10px;
 }
 
 .question-section {
@@ -218,7 +220,14 @@ export default {
   text-align: right;
 }
 
-.answer-section p:hover,
+.question-section p {
+  font-size: 8pt;
+  font-weight: 700;
+  margin-top: 10px;
+  margin-bottom: 0;
+}
+
+.question-section p:hover,
 .question-section h5:hover,
 .question-section .b-icon:hover,
 .questions-label .b-icon:hover {
