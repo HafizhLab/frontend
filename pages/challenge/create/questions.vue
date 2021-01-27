@@ -2,14 +2,19 @@
   <div class="pt-3 pb-5 container">
     <div class="title-sm pb-3">
       <h5>
-        <nuxt-link to="/play/personal-test">
+        <nuxt-link to="/challenge/create">
           <b-icon icon="chevron-left" class="mr-2"></b-icon>
         </nuxt-link>
-        Ujian Tahfidz Pondok A
+        {{ name }}
       </h5>
     </div>
-    <h5 style="margin-left: 2.5rem">By Verse : {{ surah }}</h5>
-    <div class="questions-label mt-3">
+    <h5 v-if="basedOn == 'Surah'" style="margin-left: 2.5rem">
+      By {{ type }} : {{ chosen }}
+    </h5>
+    <h5 v-else-if="basedOn == 'Juz'" style="margin-left: 2.5rem">
+      By {{ type }} : Juz {{ chosen }}
+    </h5>
+    <div class="questions-label mt-5">
       <h3 class="text-center">
         <b-icon
           v-if="questionNumber > 1"
@@ -81,6 +86,10 @@ import Dummy from "~/assets/AlBaqarah.json";
 export default {
   data() {
     return {
+      name: "",
+      type: "",
+      basedOn: "",
+      chosen: "",
       questionNumber: 1,
       currentQuestion: null,
       currentOptions: null,
@@ -97,7 +106,10 @@ export default {
   },
   created() {
     this.juzData = Dummy.data[0].ayahs;
-    this.surah = "Al Baqarah";
+    this.chosen = this.$route.params.chosen;
+    this.name = this.$route.params.name;
+    this.type = this.$route.params.type;
+    this.basedOn = this.$route.params.basedOn;
   },
   methods: {
     selectQuestion() {
