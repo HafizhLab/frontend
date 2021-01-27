@@ -37,7 +37,13 @@
         </h5>
       </div>
       <div class="answer-section">
-        <b-button v-for="index in 4" :key="index" class="ans-option-btn">
+        <b-button
+          v-for="index in 4"
+          :key="index"
+          class="ans-option-btn"
+          variant="outline-info"
+          @click="chooseAnswer(index)"
+        >
           <div class="row">
             <div class="col-2 icon-ans">
               <b-icon icon="circle"></b-icon>
@@ -92,7 +98,7 @@ export default {
       optionId: 1,
       currentQuestion: null,
       currentOptions: [null, null, null, null],
-      optionText: "",
+      correctOption: null,
       data: null,
       questions: [
         {
@@ -124,15 +130,40 @@ export default {
       this.$refs["select-questions"].hide();
     },
     selectOptions(item) {
+      item["isCorrect"] = false;
       this.currentOptions[this.optionId] = item;
       this.questions[this.questionNumber - 1].options[this.optionId] = item;
       this.$refs["option-text"][this.optionId].innerText = item.text;
       this.$refs["option-text"][this.optionId].classList.add("font-kitab");
       this.$refs["select-options"].hide();
     },
-    // chooseAnswer(index) {
-    //   this.questions[this.questionNumber - 1].options[index].isCorrect = true;
-    // },
+    checkChosen(index) {
+      if (!this.questions[this.questionNumber - 1].options[index - 1]) {
+        return false;
+      }
+      return this.questions[this.questionNumber - 1].options[index - 1]
+        .isCorrect;
+    },
+    chooseAnswer(index) {
+      var optionId = index - 1;
+      if (this.currentOptions[optionId]) {
+        if (this.correctOption != null) {
+          this.$refs["option-text"][
+            this.correctOption
+          ].parentNode.parentNode.classList.remove("choosen-ans");
+        }
+
+        this.questions[this.questionNumber - 1].options[
+          optionId
+        ].isCorrect = true;
+        this.$refs["option-text"][optionId].parentNode.parentNode.classList.add(
+          "choosen-ans"
+        );
+        this.correctOption = optionId;
+      } else {
+        this.showModalOptions(index);
+      }
+    },
     changeQuestion(questionNumber) {
       var question_id = questionNumber - 1;
       this.questionNumber = questionNumber;
@@ -199,6 +230,12 @@ export default {
   width: 100%;
 }
 
+.ans-option-btn:active,
+.ans-option-btn:focus {
+  outline: none !important;
+  box-shadow: none;
+}
+
 .ans-option-btn:hover {
   background-color: #49c0db;
   border: 1px solid #49c0db;
@@ -242,7 +279,7 @@ export default {
   align-items: center;
 }
 
-#choosen-ans {
+.choosen-ans {
   border-radius: 1rem;
   padding: 1rem;
   min-width: 50%;
@@ -253,17 +290,14 @@ export default {
   margin-bottom: 5px;
   text-align: right;
   background-color: #f0f9ee;
-  border: 1px solid#6AC259;
+  border: 1px solid #6ac259;
   width: 100%;
-}
-
-#green-color {
   color: #6ac259;
 }
 
-#select-clicked {
-  color: white;
-  background: #49c0db;
+.choosen-ans:hover {
+  background: #6ac259;
+  border: 1px solid #6ac259;
 }
 
 .modal-open .modal-dialog {
