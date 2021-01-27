@@ -130,24 +130,23 @@ export default {
       this.$refs["select-questions"].hide();
     },
     selectOptions(item) {
-      item["isCorrect"] = false;
-      this.currentOptions[this.optionId] = item;
-      this.questions[this.questionNumber - 1].options[this.optionId] = item;
-      this.$refs["option-text"][this.optionId].innerText = item.text;
+      var option = { ...item };
+      this.currentOptions[this.optionId] = option;
+      this.questions[this.questionNumber - 1].options[this.optionId] = option;
+      this.questions[this.questionNumber - 1].options[this.optionId][
+        "isCorrect"
+      ] = false;
+      this.$refs["option-text"][this.optionId].innerText = option.text;
       this.$refs["option-text"][this.optionId].classList.add("font-kitab");
       this.$refs["select-options"].hide();
-    },
-    checkChosen(index) {
-      if (!this.questions[this.questionNumber - 1].options[index - 1]) {
-        return false;
-      }
-      return this.questions[this.questionNumber - 1].options[index - 1]
-        .isCorrect;
     },
     chooseAnswer(index) {
       var optionId = index - 1;
       if (this.currentOptions[optionId]) {
         if (this.correctOption != null) {
+          this.questions[this.questionNumber - 1].options[
+            this.correctOption
+          ].isCorrect = false;
           this.$refs["option-text"][
             this.correctOption
           ].parentNode.parentNode.classList.remove("choosen-ans");
@@ -177,13 +176,27 @@ export default {
         }
         this.currentQuestion = this.questions[question_id].question;
         this.currentOptions = this.questions[question_id].options;
+        this.correctOption = null;
 
         for (var i = 0; i < 4; i++) {
           var option = this.currentOptions[i];
           if (option) {
+            if (option.isCorrect) {
+              this.$refs["option-text"][i].parentNode.parentNode.classList.add(
+                "choosen-ans"
+              );
+              this.correctOption = i;
+            } else {
+              this.$refs["option-text"][
+                i
+              ].parentNode.parentNode.classList.remove("choosen-ans");
+            }
             this.$refs["option-text"][i].innerText = option.text;
             this.$refs["option-text"][i].classList.add("font-kitab");
           } else {
+            this.$refs["option-text"][i].parentNode.parentNode.classList.remove(
+              "choosen-ans"
+            );
             this.$refs["option-text"][i].innerText = "Edit option";
             this.$refs["option-text"][i].classList.remove("font-kitab");
           }
