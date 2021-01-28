@@ -91,7 +91,38 @@
     </div>
     <hr />
     <div class="mt-4 p-1 text-center">
-      <h4 class="my-auto">Full Review</h4>
+      <h4 class="my-auto">Review</h4>
+      <div
+        v-for="(q, index) in questions"
+        :key="q.name"
+        class="result-section mt-3 p-3"
+      >
+        <div class="review-header mb-2">
+          {{ index + 1 }}. {{ q.name }}
+          <b-badge
+            v-if="q.isCorrect"
+            variant="success"
+            pill
+            class="px-2 py-1 ml-1"
+          >
+            You are Correct
+          </b-badge>
+          <b-badge v-else variant="danger" pill class="px-2 py-1 ml-1">
+            You are Wrong
+          </b-badge>
+        </div>
+        <b-progress
+          :value="q.correctCount"
+          :max="room.maxPlayer"
+          height="18px"
+          class="review-bar mb-2"
+        >
+        </b-progress>
+        <p>
+          Players Answer Correctly: {{ q.correctCount }} /
+          {{ room.maxPlayer }}
+        </p>
+      </div>
     </div>
   </div>
 </template>
@@ -102,30 +133,47 @@ export default {
     return {
       room: null,
       player: null,
+      questions: null,
     };
   },
   created() {
     this.room = {
       // code: this.$route.params.code,
-      // surah: this.$route.params.type,
+      surah: this.$route.params.surah,
       // maxPlayer: this.$route.params.max,
+      // winner1: this.$route.params.winner1,
+      // winner2: this.$route.params.winner3,
+      // winner3: this.$route.params.winner3,
       code: 1234,
-      surah: "Al-Faatiha",
-      maxPlayer: 3,
+      // surah: "Al-Faatiha",
+      maxPlayer: 6,
       winner1: ["Lorem Ipsum", 81],
       winner2: ["Lulu Ilmaknun", 66],
       winner3: ["Dolor Sitamet", 63],
     };
     this.player = {
       name: "Lulu Ilmaknun",
-      // score: this.$route.params.score,
-      // correct: this.$route.params.correct
-      // averageTime: this.$route.params.averagetime,
-      score: 66,
-      correct: 7,
-      averageTime: 16.5,
+      score: this.$route.params.playerScore,
+      correct: this.$route.params.playerCorrect,
+      averageTime: this.$route.params.playerAverageTime,
+      // rank: this.$route.params.playerRank,
+      // score: 66,
+      // correct: 7,
+      // averageTime: 16.5,
       rank: 2,
     };
+    this.questions = [
+      { name: "Al Fajr verse 11", correctCount: 4, isCorrect: true },
+      { name: "Al Fajr verse 29", correctCount: 3, isCorrect: false },
+      { name: "Al Fajr verse 20", correctCount: 1, isCorrect: true },
+      { name: "Al Fajr verse 15", correctCount: 6, isCorrect: true },
+      { name: "Al Fajr verse 3", correctCount: 0, isCorrect: false },
+      { name: "Al Fajr verse 25", correctCount: 5, isCorrect: true },
+      { name: "Al Fajr verse 2", correctCount: 4, isCorrect: false },
+      { name: "Al Fajr verse 18", correctCount: 3, isCorrect: true },
+      { name: "Al Fajr verse 10", correctCount: 1, isCorrect: true },
+      { name: "Al Fajr verse 4", correctCount: 2, isCorrect: true },
+    ];
   },
 };
 </script>
@@ -179,5 +227,17 @@ export default {
 }
 .winner-score {
   color: #aaaaaa;
+}
+.review-header {
+  font-weight: 700;
+  color: #000000;
+  font-size: 12px;
+}
+.review-bar {
+  background-color: #ffd5d4;
+}
+.review-bar .progress-bar {
+  color: #000000;
+  background-color: #bde7bd;
 }
 </style>

@@ -111,6 +111,8 @@ export default {
       surah: null,
       showResult: false,
       score: 0,
+      correctCount: 0,
+      averageTime: 0,
     };
   },
   created() {
@@ -182,9 +184,13 @@ export default {
       if (this.countDown > 0) {
         this.currentQuestion.options[index].selected = true;
       }
+
       if (isCorrect) {
-        this.score++;
+        this.correctCount++;
+        this.score += this.countDown;
       }
+      this.averageTime += this.countDown;
+
       this.showResult = true;
       setTimeout(() => {
         if (this.questionNumber + 1 <= 10) {
@@ -196,7 +202,10 @@ export default {
           this.$router.push({
             name: "play-multiplayer-result",
             params: {
-              score: this.score,
+              surah: this.surah,
+              playerScore: this.score / (this.maxTime * 10),
+              playerCorrect: this.correctCount,
+              playerAverageTime: this.averageTime / 10,
             },
           });
         }
