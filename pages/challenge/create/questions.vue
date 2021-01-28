@@ -52,7 +52,6 @@
         >
           <div class="row">
             <div class="col-2 icon-ans">
-              <b-icon icon="circle"></b-icon>
               <b-icon icon="pencil-square" @click="showModalOptions(index)">
               </b-icon>
             </div>
@@ -130,6 +129,17 @@ export default {
       this.optionId = index - 1;
       this.$refs["select-options"].show();
     },
+    check(i) {
+      this.$refs["option-text"][i].parentNode.parentNode.classList.add(
+        "choosen-ans"
+      );
+      console.log(this.$el);
+    },
+    uncheck(i) {
+      this.$refs["option-text"][i].parentNode.parentNode.classList.remove(
+        "choosen-ans"
+      );
+    },
     selectQuestion(item) {
       this.currentQuestion = item;
       this.questions[this.questionNumber - 1].question = item;
@@ -153,17 +163,13 @@ export default {
           this.questions[this.questionNumber - 1].options[
             this.correctOption
           ].isCorrect = false;
-          this.$refs["option-text"][
-            this.correctOption
-          ].parentNode.parentNode.classList.remove("choosen-ans");
+          this.uncheck(this.correctOption);
         }
 
         this.questions[this.questionNumber - 1].options[
           optionId
         ].isCorrect = true;
-        this.$refs["option-text"][optionId].parentNode.parentNode.classList.add(
-          "choosen-ans"
-        );
+        this.check(optionId);
         this.correctOption = optionId;
       } else {
         this.showModalOptions(index);
@@ -188,21 +194,15 @@ export default {
           var option = this.currentOptions[i];
           if (option) {
             if (option.isCorrect) {
-              this.$refs["option-text"][i].parentNode.parentNode.classList.add(
-                "choosen-ans"
-              );
+              this.check(i);
               this.correctOption = i;
             } else {
-              this.$refs["option-text"][
-                i
-              ].parentNode.parentNode.classList.remove("choosen-ans");
+              this.uncheck(i);
             }
             this.$refs["option-text"][i].innerText = option.text;
             this.$refs["option-text"][i].classList.add("font-kitab");
           } else {
-            this.$refs["option-text"][i].parentNode.parentNode.classList.remove(
-              "choosen-ans"
-            );
+            this.uncheck(i);
             this.$refs["option-text"][i].innerText = "Edit option";
             this.$refs["option-text"][i].classList.remove("font-kitab");
           }
