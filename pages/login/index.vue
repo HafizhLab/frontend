@@ -44,6 +44,9 @@
 </template>
 
 <script>
+import apiInterface from "~/api/apiInterface.js";
+import cookie from "js-cookie";
+
 export default {
   components: {},
   data() {
@@ -55,18 +58,32 @@ export default {
   },
   methods: {
     login() {
-      const request = {};
-
-      if (this.error == false) {
-        request["username"] = this.username;
-        request["password"] = this.password;
-
-        this.processLogin(request);
+      if (this.$store.state.user) {
+        this.$router.push({
+          path: "/",
+        });
+      } else {
+        apiInterface
+          .login({
+            username: this.username,
+            password: this.password,
+          })
+          .then((response) => {
+            let access_token = response.data.key;
+            let expired = 60 * 60 * 1000;
+            console.log(access_token);
+            cookie.set("token", access_token, { expires: expired });
+            this.$store.commit("SET_USER", {
+              username: this.username,
+            });
+            this.$router.push({
+              path: "/",
+            });
+          })
+          .catch((error) => {
+            console.log(error);
+          });
       }
-    },
-    processLogin(request) {
-      // Connect to API
-      console.log(request);
     },
   },
 };
