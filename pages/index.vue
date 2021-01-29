@@ -2,7 +2,9 @@
   <div class="container pt-3 pb-5">
     <div class="row salam pb-3">
       <div class="col-9">
-        <p>Assalamualaikum, <span>Lulu Ilmaknun</span></p>
+        <p>
+          Assalamualaikum, <span>{{ username }}</span>
+        </p>
       </div>
       <div class="col-3 text-center">
         <img src="~/assets/img/dummy-user.png" />
@@ -49,6 +51,15 @@
 <script>
 export default {
   components: {},
+  data() {
+    return {
+      username: "",
+    };
+  },
+  created() {
+    this.username = this.$store.state.user.username;
+  },
+  middleware: "auth",
 };
 </script>
 

@@ -76,7 +76,7 @@ export default {
   components: {},
   data() {
     return {
-      usnername: "",
+      username: "",
       email: "",
       password: "",
       confirmPassword: "",
@@ -87,9 +87,9 @@ export default {
     async register() {
       await apiInterface
         .register({
-          username: this.name,
+          username: this.username,
           password1: this.password,
-          password2: this.password,
+          password2: this.confirmPassword,
           email: this.email,
         })
         .then((response) => {
