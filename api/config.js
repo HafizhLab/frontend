@@ -1,10 +1,10 @@
-import axios from "@nuxtjs/axios"
+import axios from "axios";
 
-const baseURL = process.env.APP_BASE_API
+const baseURL = "http://localhost:8000";
 
-export const json_hafizhlab = axios.create({
-    baseURL: baseURL,
-    headers: {
-        "Content-type": "application/json"
-    }
-})
+export const HTTP = axios.create({
+  baseURL: baseURL,
+  headers: {
+    "Content-Type": "application/json",
+  },
+});

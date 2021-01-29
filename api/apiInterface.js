@@ -1,10 +1,10 @@
-import json_hafizhlab from "./config"
+import { HTTP } from "~/api/config";
 
 export default {
-    /* Auth */
-    // getUserById(id) {
-    //     return json_hafizhlab.get("v1/user/detail", id)
-    // }
+  /* Auth */
 
-    /* nanti di halaman yg butuh nembak api tinggal panggil apiInterface.getUser({id: id}) */
-}
+  register(data) {
+    console.log(data);
+    return HTTP.post("/api/v1/auth/registration/", data);
+  },
+};
