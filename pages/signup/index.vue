@@ -17,6 +17,11 @@
           placeholder="Username"
         />
       </div>
+      <div v-if="errors.username.length" class="error-text mt-2 mx-auto">
+        <div v-for="error in errors.username" :key="error">
+          <p class="mb-0">{{ error }}</p>
+        </div>
+      </div>
       <div class="input-group">
         <div class="input-group-prepend">
           <span class="input-group-text border-right-0">
@@ -29,6 +34,11 @@
           class="simple-form form-control border-left-0"
           placeholder="Email"
         />
+      </div>
+      <div v-if="errors.email.length" class="error-text mt-2 mx-auto">
+        <div v-for="error in errors.email" :key="error">
+          <p class="mb-0">{{ error }}</p>
+        </div>
       </div>
       <div class="input-group">
         <div class="input-group-prepend">
@@ -43,6 +53,11 @@
           placeholder="Password"
         />
       </div>
+      <div v-if="errors.password1.length" class="error-text mt-2 mx-auto">
+        <div v-for="error in errors.password1" :key="error">
+          <p class="mb-0">{{ error }}</p>
+        </div>
+      </div>
       <div class="input-group">
         <div class="input-group-prepend">
           <span class="input-group-text border-right-0">
@@ -55,6 +70,11 @@
           class="simple-form form-control border-left-0"
           placeholder="Confirm Password"
         />
+      </div>
+      <div v-if="errors.password2.length" class="error-text mt-2 mx-auto">
+        <div v-for="error in errors.password2" :key="error">
+          <p class="mb-0">{{ error }}</p>
+        </div>
       </div>
       <div class="button-signup text-center mt-3">
         <b-button variant="primary" @click="register()">Sign Up</b-button>
@@ -80,11 +100,20 @@ export default {
       email: "",
       password: "",
       confirmPassword: "",
-      error: false,
+      errors: {
+        username: [],
+        email: [],
+        password1: [],
+        password2: [],
+      },
     };
   },
   methods: {
     async register() {
+      this.errors.username = [];
+      this.errors.email = [];
+      this.errors.password1 = [];
+      this.errors.password2 = [];
       await apiInterface
         .register({
           username: this.username,
@@ -94,9 +123,27 @@ export default {
         })
         .then((response) => {
           console.log(response);
+          this.$router.push({
+            path: "/",
+          });
         })
         .catch((error) => {
-          console.log(error.response);
+          for (const e in error.response.data) {
+            switch (`${e}`) {
+              case "username":
+                this.errors.username.push(`${error.response.data[e]}`);
+                break;
+              case "email":
+                this.errors.email.push(`${error.response.data[e]}`);
+                break;
+              case "password1":
+                this.errors.password1.push(`${error.response.data[e]}`);
+                break;
+              default:
+                this.errors.password2.push(`${error.response.data[e]}`);
+                break;
+            }
+          }
         });
     },
   },
@@ -196,5 +243,9 @@ export default {
   margin: auto;
   height: fit-content;
   border-radius: 15px;
+}
+
+.error-text {
+  color: #dc143c;
 }
 </style>
