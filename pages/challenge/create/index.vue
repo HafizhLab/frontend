@@ -3,7 +3,7 @@
     <div class="title pb-3">
       <div class="container">
         <h3>
-          <nuxt-link to="/play"
+          <nuxt-link to="/challenge"
             ><b-icon icon="chevron-left" class="mr-3"></b-icon></nuxt-link
           >Create Challenge
         </h3>
