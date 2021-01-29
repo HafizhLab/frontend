@@ -44,7 +44,7 @@
         />
       </div>
       <div class="button-signup text-center mt-3">
-        <b-button variant="primary">Sign Up</b-button>
+        <b-button variant="primary" @click="register()">Sign Up</b-button>
         <p>
           Already have an account?
           <span class="highlight">
@@ -57,6 +57,8 @@
 </template>
 
 <script>
+import apiInterface from "~/api/apiInterface.js";
+
 export default {
   components: {},
   data() {
@@ -65,6 +67,23 @@ export default {
       email: "",
       password: "",
     };
+  },
+  methods: {
+    async register() {
+      await apiInterface
+        .register({
+          username: this.name,
+          password1: this.password,
+          password2: this.password,
+          email: this.email,
+        })
+        .then((response) => {
+          console.log(response);
+        })
+        .catch((error) => {
+          console.log(error.response);
+        });
+    },
   },
 };
 </script>
