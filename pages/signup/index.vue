@@ -11,8 +11,8 @@
           </span>
         </div>
         <input
-          :type="text"
           v-model="username"
+          type="text"
           class="simple-form form-control border-left-0"
           placeholder="Username"
         />
@@ -78,6 +78,7 @@ export default {
       email: "",
       password: "",
       confirmPassword: "",
+      error: false,
     };
   },
   methods: {
@@ -94,6 +95,7 @@ export default {
       }
     },
     processRegister(request) {
+      // Connect to API
       console.log(request);
     },
   },

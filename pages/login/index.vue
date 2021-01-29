@@ -7,14 +7,14 @@
       <div class="input-group">
         <div class="input-group-prepend">
           <span class="input-group-text border-right-0">
-            <img src="~/assets/img/form_email.png" />
+            <img src="~/assets/img/form_user.png" />
           </span>
         </div>
         <input
-          v-model="email"
-          type="email"
+          v-model="username"
+          type="text"
           class="simple-form form-control border-left-0"
-          placeholder="Email"
+          placeholder="Username"
         />
       </div>
       <div class="input-group">
@@ -31,7 +31,7 @@
         />
       </div>
       <div class="button-login text-center mt-3">
-        <b-button variant="primary">Login</b-button>
+        <b-button variant="primary" @click="login()">Login</b-button>
         <p>
           Don’t have an account?
           <span class="highlight">
@@ -48,10 +48,26 @@ export default {
   components: {},
   data() {
     return {
-      name: "",
-      email: "",
+      username: "",
       password: "",
+      error: false,
     };
+  },
+  methods: {
+    login() {
+      const request = {};
+
+      if (this.error == false) {
+        request["username"] = this.username;
+        request["password"] = this.password;
+
+        this.processLogin(request);
+      }
+    },
+    processLogin(request) {
+      // Connect to API
+      console.log(request);
+    },
   },
 };
 </script>
