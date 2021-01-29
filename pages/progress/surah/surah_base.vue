@@ -40,17 +40,35 @@
         <b-button v-b-modal.modal-1 class="memorize-button" size="lg">
           Mark Memorized Verses
         </b-button>
-        <b-modal id="modal-1" title="Mark Memorized Verses">
-          <b-dropdown id="dropdown-1" text="From" class="m-md-2">
-            <b-dropdown-item v-for="(ayat, index) in ayatData" :key="ayat">
-              {{ index + 1 }}
-            </b-dropdown-item>
-          </b-dropdown>
-          <b-dropdown id="dropdown-2" text="To" class="m-md-2">
-            <b-dropdown-item v-for="(ayat, index) in ayatData" :key="ayat">
-              {{ index + 1 }}
-            </b-dropdown-item>
-          </b-dropdown>
+        <b-modal
+          id="modal-1"
+          ref="modal-memo"
+          title="Mark Memorized Verses"
+          hide-footer="true"
+        >
+          <b-form @submit="onSubmit">
+            <b-form-group
+              id="input-group-from"
+              label="From:"
+              label-for="input-from"
+            >
+              <b-form-select
+                id="input-from"
+                v-model="form.versefrom"
+                :options="verses"
+                required
+              ></b-form-select>
+            </b-form-group>
+            <b-form-group id="input-group-to" label="To:" label-for="input-to">
+              <b-form-select
+                id="input-to"
+                v-model="form.verseto"
+                :options="verses"
+                required
+              ></b-form-select>
+            </b-form-group>
+            <b-button type="submit" variant="primary">Submit</b-button>
+          </b-form>
         </b-modal>
       </b-container>
       <hr />
@@ -87,6 +105,8 @@ export default {
       surah: null,
       ayatData: null,
       clicked: false,
+      form: { versefrom: null, verseto: null },
+      verses: null,
     };
   },
   created() {
@@ -95,6 +115,7 @@ export default {
     };
     this.ayatData = this.getAyat();
     this.max = this.ayatData.length;
+    this.verses = this.getVersesOptions();
   },
   methods: {
     getAyat() {
@@ -106,6 +127,13 @@ export default {
         return ayat.text;
       });
     },
+    getVersesOptions() {
+      let verseList = [];
+      for (let i = 1; i <= this.ayatData.length; i++) {
+        verseList.push(i);
+      }
+      return verseList;
+    },
     checkButton(id) {
       let e = document.getElementById(id);
       if (e.classList.contains("white")) {
@@ -115,6 +143,11 @@ export default {
         e.classList.remove("blue");
         e.classList.add("white");
       }
+    },
+    onSubmit(event) {
+      event.preventDefault();
+      // submit
+      this.$refs["modal-memo"].hide();
     },
   },
 };
