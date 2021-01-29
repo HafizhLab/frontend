@@ -84,7 +84,6 @@ export default {
     };
   },
   methods: {
-<<<<<<< HEAD
     async register() {
       await apiInterface
         .register({
@@ -99,23 +98,6 @@ export default {
         .catch((error) => {
           console.log(error.response);
         });
-=======
-    register() {
-      const request = {};
-
-      if (this.error == false) {
-        request["username"] = this.username;
-        request["password1"] = this.password;
-        request["password2"] = this.confirmPassword;
-        request["email"] = this.email;
-
-        this.processRegister(request);
-      }
-    },
-    processRegister(request) {
-      // Connect to API
-      console.log(request);
->>>>>>> 74cc6c43087d43bbab0b0d07e646491341a0b6da
     },
   },
 };
