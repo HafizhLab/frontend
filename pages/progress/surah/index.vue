@@ -76,17 +76,29 @@
 </template>
 
 <script>
+import AllSurah from "~/assets/surah.json";
+
 export default {
   data() {
     return {
-      memo_value: 38,
-      test_value: 20,
+      memo_value: 0,
+      test_value: 0,
       max: 114,
       surahs: [
-        { name: "Al-Faatiha", max: 7, memo: 7, test: 5 },
-        { name: "Al-Baqara", max: 286, memo: 50, test: 20 },
+        { name: "Al-Faatiha", max: 7, memo: 0, test: 0 },
+        { name: "Al-Baqara", max: 286, memo: 0, test: 0 },
+        { name: "Aal-i-Imraan", max: 200, memo: 0, test: 0 },
+        { name: "An-Nisaa", max: 200, memo: 0, test: 0 },
       ],
     };
+  },
+  created() {
+    this.surahs = this.getSurahList();
+  },
+  methods: {
+    getSurahList() {
+      for
+    },
   },
 };
 </script>

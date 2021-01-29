@@ -76,13 +76,13 @@
 </template>
 
 <script>
-import Dummy from "~/assets/AlBaqarah.json";
+import Dummy from "~/assets/juzData.json";
 
 export default {
   data() {
     return {
-      memo_value: 7,
-      test_value: 5,
+      memo_value: 0,
+      test_value: 0,
       max: null,
       surah: null,
       ayatData: null,
@@ -111,9 +111,11 @@ export default {
       if (e.classList.contains("white")) {
         e.classList.remove("white");
         e.classList.add("blue");
+        this.memo_value += 1;
       } else {
         e.classList.remove("blue");
         e.classList.add("white");
+        this.memo_value -= 1;
       }
     },
   },
