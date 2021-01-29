@@ -17,6 +17,11 @@
           placeholder="Username"
         />
       </div>
+      <div v-if="errors.username.length" class="error-text mt-2 mx-auto">
+        <div v-for="error in errors.username" :key="error">
+          <p class="mb-0">{{ error }}</p>
+        </div>
+      </div>
       <div class="input-group">
         <div class="input-group-prepend">
           <span class="input-group-text border-right-0">
@@ -29,6 +34,11 @@
           class="simple-form form-control border-left-0"
           placeholder="Password"
         />
+      </div>
+      <div v-if="errors.password.length" class="error-text mt-2 mx-auto">
+        <div v-for="error in errors.password" :key="error">
+          <p class="mb-0">{{ error }}</p>
+        </div>
       </div>
       <div class="button-login text-center mt-3">
         <b-button variant="primary" @click="login()">Login</b-button>
@@ -53,11 +63,16 @@ export default {
     return {
       username: "",
       password: "",
-      error: false,
+      errors: {
+        username: [],
+        password: [],
+      },
     };
   },
   methods: {
     login() {
+      this.errors.username = [];
+      this.errors.password = [];
       if (this.$store.state.user) {
         this.$router.push({
           path: "/",
@@ -82,6 +97,13 @@ export default {
           })
           .catch((error) => {
             console.log(error);
+            for (const e in error.response.data) {
+              if (`${e}` === "username") {
+                this.errors.username.push(`${error.response.data[e]}`);
+              } else {
+                this.errors.password.push(`${error.response.data[e]}`);
+              }
+            }
           });
       }
     },
