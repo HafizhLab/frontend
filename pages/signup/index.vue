@@ -65,19 +65,6 @@
           </span>
         </p>
       </div>
-
-      <b-modal
-        ref="register-popup"
-        height="auto"
-        hide-footer="true"
-        hide-header="true"
-        @before-open="errorMessage = ''"
-      >
-        <div v-if="!error" class="modal-container">
-          <h3>Registration success!</h3>
-          <h3>Redirecting to login page...</h3>
-        </div>
-      </b-modal>
     </div>
   </div>
 </template>
@@ -91,8 +78,6 @@ export default {
       email: "",
       password: "",
       confirmPassword: "",
-      error: false,
-      errorMessage: "",
     };
   },
   methods: {
@@ -110,14 +95,6 @@ export default {
     },
     processRegister(request) {
       console.log(request);
-
-      this.showModal("register-popup");
-    },
-    closeModal(name) {
-      this.$refs[name].hide();
-    },
-    showModal(name) {
-      this.$refs[name].show();
     },
   },
 };
