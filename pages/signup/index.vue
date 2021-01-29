@@ -12,9 +12,9 @@
         </div>
         <input
           :type="text"
-          v-model="name"
+          v-model="username"
           class="simple-form form-control border-left-0"
-          placeholder="Full Name"
+          placeholder="Username"
         />
       </div>
       <div class="input-group">
@@ -43,8 +43,21 @@
           placeholder="Password"
         />
       </div>
+      <div class="input-group">
+        <div class="input-group-prepend">
+          <span class="input-group-text border-right-0">
+            <img src="~/assets/img/form_password.png" />
+          </span>
+        </div>
+        <input
+          v-model="confirmPassword"
+          type="password"
+          class="simple-form form-control border-left-0"
+          placeholder="Confirm Password"
+        />
+      </div>
       <div class="button-signup text-center mt-3">
-        <b-button variant="primary">Sign Up</b-button>
+        <b-button variant="primary" @click="register()">Sign Up</b-button>
         <p>
           Already have an account?
           <span class="highlight">
@@ -52,6 +65,19 @@
           </span>
         </p>
       </div>
+
+      <b-modal
+        ref="register-popup"
+        height="auto"
+        hide-footer="true"
+        hide-header="true"
+        @before-open="errorMessage = ''"
+      >
+        <div v-if="!error" class="modal-container">
+          <h3>Registration success!</h3>
+          <h3>Redirecting to login page...</h3>
+        </div>
+      </b-modal>
     </div>
   </div>
 </template>
@@ -61,10 +87,38 @@ export default {
   components: {},
   data() {
     return {
-      name: "",
+      usnername: "",
       email: "",
       password: "",
+      confirmPassword: "",
+      error: false,
+      errorMessage: "",
     };
+  },
+  methods: {
+    register() {
+      const request = {};
+
+      if (this.error == false) {
+        request["username"] = this.username;
+        request["password1"] = this.password;
+        request["password2"] = this.confirmPassword;
+        request["email"] = this.email;
+
+        this.processRegister(request);
+      }
+    },
+    processRegister(request) {
+      console.log(request);
+
+      this.showModal("register-popup");
+    },
+    closeModal(name) {
+      this.$refs[name].hide();
+    },
+    showModal(name) {
+      this.$refs[name].show();
+    },
   },
 };
 </script>
@@ -139,5 +193,28 @@ export default {
   border: 1px solid #b4b4b4;
   -webkit-box-shadow: none;
   box-shadow: none;
+}
+
+.modal-container {
+  text-align: center;
+  padding: 3%;
+}
+
+.modal-open {
+  padding-right: 0px !important;
+}
+
+.modal-open .modal-dialog {
+  padding: 2%;
+  border-radius: 50px;
+  height: 100%;
+  margin: auto;
+  display: flex;
+}
+
+.modal-content {
+  margin: auto;
+  height: fit-content;
+  border-radius: 15px;
 }
 </style>
