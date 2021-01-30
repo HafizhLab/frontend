@@ -98,7 +98,7 @@
         class="result-section mt-3 p-3"
       >
         <div class="review-header mb-2">
-          {{ index + 1 }}. {{ q.name }}
+          {{ parseInt(index) + 1 }}. {{ q.name }}
           <b-badge
             v-if="q.isCorrect"
             variant="success"
