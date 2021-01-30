@@ -24,8 +24,11 @@
       </h3>
     </div>
     <div class="main mt-3 pt-4 pb-3 container">
-      <h5>
+      <h5 v-if="$route.params.basedOn == 'Surah'">
         <strong>{{ surah }}</strong>
+      </h5>
+      <h5 v-else>
+        <strong>Juz {{ surah }}</strong>
       </h5>
       <div class="question-section pt-3 pb-3">
         <h3>{{ currentQuestion.text }}</h3>
@@ -97,7 +100,8 @@
 </template>
 
 <script>
-import Dummy from "~/assets/AlBaqarah.json";
+import apiInterface from "~/api/apiInterface.js";
+// import Dummy from "~/assets/AlBaqarah.json";
 
 export default {
   data() {
@@ -116,7 +120,6 @@ export default {
     };
   },
   created() {
-    this.juzData = Dummy.data[0].ayahs;
     this.surah = this.$route.params.chosen;
     this.currentQuestion = this.getQuestion();
     this.countDownTimer();
@@ -132,13 +135,19 @@ export default {
         this.handleAnswerClick(false);
       }
     },
-    getQuestion() {
-      var currentAyah = Math.floor(Math.random() * this.juzData.length - 1);
-      var question = {
-        text: this.juzData[currentAyah].text,
-        options: this.getOption(currentAyah),
-      };
-      return question;
+    async getQuestion() {
+      await apiInterface
+        .getQuestion({
+          mode: this.$route.params.testType.toLowerCase(),
+          type: this.$route.params.basedOn.toLowerCase(),
+          number: this.$route.params.chosen,
+        })
+        .then((response) => {
+          this.currentQuestion = response.data;
+          this.isLoading = false;
+          clearTimeout(this.timer);
+          this.countDownTimer();
+        });
     },
     getOption(currentAyah) {
       var arrNum = [

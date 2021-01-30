@@ -29,8 +29,11 @@
         </h3>
       </div>
       <div class="main mt-3 pt-4 pb-3 container">
-        <h5>
+        <h5 v-if="$route.params.basedOn == 'Surah'">
           <strong>{{ surah }}</strong>
+        </h5>
+        <h5 v-else>
+          <strong>Juz {{ surah }}</strong>
         </h5>
         <div class="question-section pt-3 pb-3">
           <h3>{{ question.text }}</h3>
