@@ -55,7 +55,7 @@
                   :to="`/progress/surah/${surah.name}`"
                   class="surah-list"
                 >
-                  <section class="surah-number mr-2">{{ index }}</section>
+                  <section class="surah-number mr-3">{{ index + 1 }}</section>
                   {{ surah.name }}
                 </nuxt-link>
               </b-col>
@@ -76,17 +76,34 @@
 </template>
 
 <script>
+import AllSurah from "~/assets/surah.json";
+
 export default {
   data() {
     return {
-      memo_value: 38,
-      test_value: 20,
+      memo_value: 0,
+      test_value: 0,
       max: 114,
-      surahs: [
-        { name: "Al-Faatiha", max: 7, memo: 7, test: 5 },
-        { name: "Al-Baqara", max: 286, memo: 50, test: 20 },
-      ],
+      surahs: [],
     };
+  },
+  created() {
+    this.surahs = this.getSurahList();
+  },
+  methods: {
+    getSurahList() {
+      var surahList = [];
+      for (let i = 0; i < AllSurah.data.length; i++) {
+        var surah = {
+          name: AllSurah.data[i].englishName,
+          max: AllSurah.data[i].numberOfAyahs,
+          memo: 0,
+          test: 0,
+        };
+        surahList.push(surah);
+      }
+      return surahList;
+    },
   },
 };
 </script>

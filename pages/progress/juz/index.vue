@@ -97,15 +97,15 @@
 export default {
   data() {
     return {
-      memo_value: 5,
-      test_value: 2,
+      memo_value: 0,
+      test_value: 0,
       max: 30,
       juz_list: [
         {
           name: "Juz 1",
           max: 150,
-          memo: 80,
-          test: 50,
+          memo: 0,
+          test: 0,
           surahs: [
             { name: "Al-Faatiha", ayat: "1-7", first_ayat: "1" },
             { name: "Al-Baqara", ayat: "1-141", first_ayat: "1" },
@@ -114,9 +114,56 @@ export default {
         {
           name: "Juz 2",
           max: 111,
-          memo: 70,
-          test: 30,
+          memo: 0,
+          test: 0,
           surahs: [{ name: "Al-Baqara", ayat: "142-252", first_ayat: "142" }],
+        },
+        {
+          name: "Juz 3",
+          max: 126,
+          memo: 0,
+          test: 0,
+          surahs: [
+            { name: "Al-Baqara", ayat: "253-286", first_ayat: "253" },
+            { name: "Aal-i-Imraan", ayat: "1-92", first_ayat: "1" },
+          ],
+        },
+        {
+          name: "Juz 4",
+          max: 131,
+          memo: 0,
+          test: 0,
+          surahs: [
+            { name: "Aal-i-Imraan", ayat: "93-200", first_ayat: "93" },
+            { name: "An-Nisaa", ayat: "1-23", first_ayat: "1" },
+          ],
+        },
+        {
+          name: "Juz 5",
+          max: 124,
+          memo: 0,
+          test: 0,
+          surahs: [{ name: "An-Nisaa", ayat: "24-147", first_ayat: "24" }],
+        },
+        {
+          name: "Juz 6",
+          max: 110,
+          memo: 0,
+          test: 0,
+          surahs: [
+            { name: "An-Nisaa", ayat: "148-176", first_ayat: "148" },
+            { name: "Al-Maaida", ayat: "1-81", first_ayat: "1" },
+          ],
+        },
+        {
+          name: "Juz 7",
+          max: 149,
+          memo: 0,
+          test: 0,
+          surahs: [
+            { name: "Al-Maaida", ayat: "82-120", first_ayat: "82" },
+            { name: "Al-An'aam", ayat: "1-110", first_ayat: "1" },
+          ],
         },
       ],
     };
