@@ -8,8 +8,8 @@
         <img src="~/assets/img/dummy-user.png" />
       </div>
       <div class="row profile-info mb-3 m-0">
-        <p class="name">Lulu Ilmaknun</p>
-        <p class="email">lulu@mail.com</p>
+        <p class="name">{{ username }}</p>
+        <p class="email">admin@mail.com</p>
       </div>
     </div>
     <div class="profile-menu m-5">
@@ -28,6 +28,15 @@
 <script>
 export default {
   components: {},
+  data() {
+    return {
+      username: "",
+    };
+  },
+  created() {
+    this.username = this.$store.state.user.username;
+  },
+  middleware: "auth",
 };
 </script>
 

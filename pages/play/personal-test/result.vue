@@ -19,14 +19,15 @@
         </div>
       </div>
       <b-progress :max="10" height="1.3rem">
-        <b-progress-bar :value="4"> </b-progress-bar>
+        <b-progress-bar :value="totalCorrectness"> </b-progress-bar>
       </b-progress>
       <div class="review-section mt-3">
         <div v-for="(item, index) in review" :key="index" class="review-item">
           <div class="row">
             <div class="col-9">
               <h6>
-                {{ index + 1 }}. {{ item.name }} verse {{ item.verseNum }}
+                {{ parseInt(index) + 1 }}. {{ item.name }} verse
+                {{ item.verseNum }}
               </h6>
             </div>
             <div class="col-3">
@@ -105,6 +106,13 @@ export default {
       totalQuestion: 10,
       totalCorrectness: 4,
     };
+  },
+  created() {
+    var result = this.$store.state.playResult;
+    this.review = result.review;
+    console.log(this.review);
+    this.totalQuestion = result.totalQuestion;
+    this.totalCorrectness = result.totalCorrectness;
   },
 };
 </script>
