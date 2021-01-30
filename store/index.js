@@ -4,22 +4,18 @@
 
 export const state = () => ({
   user: null,
+  question: null,
+  countDown: null,
 });
 
 export const mutations = {
   SET_USER(state, data) {
     state.user = data;
   },
+  SET_QUESTION(state, data) {
+    state.question = data;
+  },
+  SET_COUNTDOWN(state, data) {
+    state.countDown = data;
+  },
 };
-
-// export const actions = {
-//     async nuxtServerInit({ commit }, context) {
-//         const cookies = cookie.parse(context.req.headers.cookie || "")
-//         let token = cookies.token
-//         await apiInterface.verifyToken({
-//             token: token
-//         }).then((respone) => {
-//             if ()
-//         })
-//     }
-// }

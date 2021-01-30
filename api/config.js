@@ -1,9 +1,17 @@
 import axios from "axios";
 
-const baseURL = "http://localhost:8000";
+const baseURLBackend = "http://hafizhlab.hashlash.dev";
+const baseURLQuran = "http://api.alquran.cloud";
 
-export const HTTP = axios.create({
-  baseURL: baseURL,
+export const be = axios.create({
+  baseURL: baseURLBackend,
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
+
+export const quran = axios.create({
+  baseURL: baseURLQuran,
   headers: {
     "Content-Type": "application/json",
   },
