@@ -24,15 +24,3 @@ export const mutations = {
     state.playResult = data;
   },
 };
-
-// export const actions = {
-//     async nuxtServerInit({ commit }, context) {
-//         const cookies = cookie.parse(context.req.headers.cookie || "")
-//         let token = cookies.token
-//         await apiInterface.verifyToken({
-//             token: token
-//         }).then((respone) => {
-//             if ()
-//         })
-//     }
-// }

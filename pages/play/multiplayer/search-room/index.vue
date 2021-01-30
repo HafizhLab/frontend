@@ -42,7 +42,10 @@
           v-model="chosen"
           :list="simpleSuggestionList"
           :filter-by-query="true"
+          display-attribute="name"
+          value-attribute="number"
           placeholder="Search..."
+          max-suggestions="114"
         ></vue-simple-suggest>
       </div>
       <div class="button-start text-center mt-3">
@@ -64,6 +67,7 @@
 </template>
 
 <script>
+import apiInterface from "~/api/apiInterface.js";
 import VueSimpleSuggest from "vue-simple-suggest";
 import "vue-simple-suggest/dist/styles.css";
 
@@ -76,9 +80,46 @@ export default {
       testType: "Verse",
       testBasedOn: "Surah",
       chosen: "",
+      surahList: [],
+      juzList: [],
     };
   },
+  computed: {
+    simpleSuggestionList() {
+      if (this.testBasedOn == "Surah") {
+        return this.surahList;
+      } else {
+        return this.juzList;
+      }
+    },
+  },
+  created() {
+    this.getSurahList();
+    this.getJuzList();
+  },
   methods: {
+    getSurahList() {
+      apiInterface.getQuranMeta().then((response) => {
+        var result = [];
+        response.data.data.surahs.references.forEach((surah) => {
+          result.push({
+            number: surah.number,
+            name: surah.englishName,
+          });
+        });
+        this.surahList = result;
+      });
+    },
+    getJuzList() {
+      var result = [];
+      for (var i = 1; i <= 30; i++) {
+        result.push({
+          number: i,
+          name: `Juz ${i}`,
+        });
+      }
+      this.juzList = result;
+    },
     switchTestType(type) {
       if (this.testType == "Verse" && type != "verse") {
         this.testType = "Word";
@@ -92,19 +133,7 @@ export default {
       } else if (this.testBasedOn == "Juz" && type != "juz") {
         this.testBasedOn = "Surah";
       }
-    },
-    simpleSuggestionList() {
-      if (this.testBasedOn == "Surah") {
-        return [
-          "Al-Faatihah",
-          "Al-Baqarah",
-          "Ali-Imran",
-          "An-Nisaa",
-          "Al-Maaidah",
-        ];
-      } else {
-        return ["Juz 1", "Juz 2", "Juz 3", "Juz 4", "Juz 5"];
-      }
+      this.chosen = "";
     },
   },
 };
