@@ -42,11 +42,7 @@ export default {
   methods: {
     getChallengeList() {
       // Dummy data
-      return [
-        { id: 0, name: "Al-Baqarah #1", num_of_questions: 3 },
-        { id: 1, name: "Al-Baqarah #2", num_of_questions: 5 },
-        { id: 2, name: "Al-Baqarah #3", num_of_questions: 3 },
-      ];
+      return this.$store.state.listChallenge;
     },
   },
 };
