@@ -97,6 +97,7 @@
 </template>
 
 <script>
+import apiInterface from "~/api/apiInterface.js";
 import Dummy from "~/assets/AlBaqarah.json";
 
 export default {
@@ -107,18 +108,25 @@ export default {
       countDown: 25,
       questionNumber: 1,
       currentQuestion: null,
+      currentVerseNumber: null,
       juzData: null,
       surah: null,
       showResult: false,
       score: 0,
       correctCount: 0,
       averageTime: 0,
+      review: {},
     };
   },
   created() {
     this.juzData = Dummy.data[0].ayahs;
-    this.surah = this.$route.params.chosen;
-    this.currentQuestion = this.getQuestion();
+    if (this.$route.params.testType == "Verse") {
+      this.currentQuestion = this.getQuestionAyah();
+      this.surah = this.currentQuestion.surah;
+    } else {
+      this.currentQuestion = this.getQuestionWord();
+      this.surah = this.currentQuestion.title;
+    }
     this.countDownTimer();
   },
   methods: {
@@ -132,12 +140,28 @@ export default {
         this.handleAnswerClick(false);
       }
     },
-    getQuestion() {
+    async getQuestionWord() {
+      await apiInterface
+        .getQuestion({
+          mode: this.$route.params.testType.toLowerCase(),
+          type: this.$route.params.basedOn.toLowerCase(),
+          number: this.$route.params.chosen,
+        })
+        .then((response) => {
+          this.question = response.data;
+          this.isLoading = false;
+          clearTimeout(this.timer);
+        });
+    },
+    getQuestionAyah() {
       var currentAyah = Math.floor(Math.random() * this.juzData.length - 1);
       var question = {
         text: this.juzData[currentAyah].text,
+        surah: this.juzData[currentAyah].surah,
+        verseNumber: this.juzData[currentAyah].number,
         options: this.getOption(currentAyah),
       };
+      this.isLoading = false;
       return question;
     },
     getOption(currentAyah) {
@@ -179,6 +203,11 @@ export default {
       if (this.showResult) return; // prevent user clicked button when state is showing result
 
       clearTimeout(this.timer);
+      this.review[this.questionNumber - 1] = {
+        name: this.currentQuestion.surah,
+        verseNum: this.currentQuestion.verseNumber,
+        isCorrect: isCorrect,
+      };
 
       // handling if time is out and user not answered
       if (this.countDown > 0) {
@@ -195,10 +224,19 @@ export default {
       setTimeout(() => {
         if (this.questionNumber + 1 <= 10) {
           this.questionNumber++;
-          this.currentQuestion = this.getQuestion();
+          if (this.$route.params.testType == "Verse") {
+            this.currentQuestion = this.getQuestionAyah();
+            this.surah = this.currentQuestion.surah;
+          } else {
+            this.currentQuestion = this.getQuestionWord();
+            this.surah = this.currentQuestion.title;
+          }
           this.countDown = this.maxTime;
           this.countDownTimer();
         } else {
+          this.$store.commit("SET_PLAY_RESULT", {
+            review: this.review,
+          });
           this.$router.push({
             name: "play-multiplayer-result",
             params: {

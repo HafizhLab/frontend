@@ -18,7 +18,12 @@
           :key="room.code"
           :to="{
             name: 'play-multiplayer-waiting-room',
-            params: { code: room.code },
+            params: {
+              code: room.code,
+              type: $route.params.type,
+              basedOn: $route.params.basedOn,
+              chosen: $route.params.chosen,
+            },
           }"
         >
           <div class="row item">

@@ -98,7 +98,7 @@
         class="result-section mt-3 p-3"
       >
         <div class="review-header mb-2">
-          {{ index + 1 }}. {{ q.name }}
+          {{ parseInt(index) + 1 }}. {{ q.name }}
           <b-badge
             v-if="q.isCorrect"
             variant="success"
@@ -148,11 +148,11 @@ export default {
       // surah: "Al-Faatiha",
       maxPlayer: 6,
       winner1: ["Lorem Ipsum", 81],
-      winner2: ["Lulu Ilmaknun", 66],
+      winner2: ["admin", 66],
       winner3: ["Dolor Sitamet", 63],
     };
     this.player = {
-      name: "Lulu Ilmaknun",
+      name: this.$store.state.user.username,
       score: this.$route.params.playerScore,
       correct: this.$route.params.playerCorrect,
       averageTime: this.$route.params.playerAverageTime,
@@ -162,18 +162,7 @@ export default {
       // averageTime: 16.5,
       rank: 2,
     };
-    this.questions = [
-      { name: "Al Fajr verse 11", correctCount: 4, isCorrect: true },
-      { name: "Al Fajr verse 29", correctCount: 3, isCorrect: false },
-      { name: "Al Fajr verse 20", correctCount: 1, isCorrect: true },
-      { name: "Al Fajr verse 15", correctCount: 6, isCorrect: true },
-      { name: "Al Fajr verse 3", correctCount: 0, isCorrect: false },
-      { name: "Al Fajr verse 25", correctCount: 5, isCorrect: true },
-      { name: "Al Fajr verse 2", correctCount: 4, isCorrect: false },
-      { name: "Al Fajr verse 18", correctCount: 3, isCorrect: true },
-      { name: "Al Fajr verse 10", correctCount: 1, isCorrect: true },
-      { name: "Al Fajr verse 4", correctCount: 2, isCorrect: true },
-    ];
+    this.questions = this.$store.state.playResult.review;
   },
 };
 </script>

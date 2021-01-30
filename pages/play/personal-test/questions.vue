@@ -1,68 +1,92 @@
 <template>
-  <div class="pt-3 pb-5 container">
-    <div class="title-sm pb-3">
-      <h5>
-        <nuxt-link to="/play/personal-test">
-          <b-icon icon="chevron-left" class="mr-2"></b-icon>
-        </nuxt-link>
-        Personal Test
-      </h5>
+  <div>
+    <div v-if="isLoading" class="pt-3 pb-5 container text-center">
+      <h5>Generating questions...</h5>
     </div>
-    <div class="timer">
-      <b-progress :max="maxTime" height="2rem">
-        <b-progress-bar :value="countDown">
-          <span
-            ><b-icon icon="clock" class="mr-2"></b-icon
-            >{{ countDown }} sec</span
-          >
-        </b-progress-bar>
-      </b-progress>
-    </div>
-    <div class="questions-label mt-3">
-      <h3>
-        Question {{ questionNumber }} <span style="font-size: 1.3rem">/10</span>
-      </h3>
-    </div>
-    <div class="main mt-3 pt-4 pb-3 container">
-      <h5>
-        <strong>{{ surah }}</strong>
-      </h5>
-      <div class="question-section pt-3 pb-3">
-        <h3>{{ currentQuestion.text }}</h3>
+    <div v-else class="pt-3 pb-5 container">
+      <div class="title-sm pb-3">
+        <h5>
+          <nuxt-link to="/play/personal-test">
+            <b-icon icon="chevron-left" class="mr-2"></b-icon>
+          </nuxt-link>
+          Personal Test
+        </h5>
       </div>
-      <div v-if="showResult" class="answer-section">
-        <div v-for="(option, index) in currentQuestion.options" :key="index">
+      <div class="timer">
+        <b-progress :max="maxTime" height="2rem">
+          <b-progress-bar :value="countDown">
+            <span
+              ><b-icon icon="clock" class="mr-2"></b-icon
+              >{{ countDown }} sec</span
+            >
+          </b-progress-bar>
+        </b-progress>
+      </div>
+      <div class="questions-label mt-3">
+        <h3>
+          Question {{ questionNumber }}
+          <span style="font-size: 1.3rem">/10</span>
+        </h3>
+      </div>
+      <div class="main mt-3 pt-4 pb-3 container">
+        <h5>
+          <strong>{{ question.title }}</strong>
+        </h5>
+        <div class="question-section pt-3 pb-3">
+          <h3>{{ question.text }}</h3>
+        </div>
+        <div v-if="showResult" class="answer-section">
+          <div v-for="(option, index) in question.options" :key="index">
+            <b-button
+              v-if="option.isCorrect"
+              id="correct-ans"
+              class="ans-option-btn"
+              variant="primary"
+            >
+              <div class="row">
+                <div class="col-2 icon-ans">
+                  <b-icon id="green-color" icon="check-circle-fill"></b-icon>
+                </div>
+                <div class="col-10 text-ans">
+                  {{ option.text }}
+                </div>
+              </div>
+            </b-button>
+            <b-button
+              v-else-if="!option.isCorrect && option.selected"
+              id="wrong-ans"
+              class="ans-option-btn"
+              variant="primary"
+            >
+              <div class="row">
+                <div class="col-2 icon-ans">
+                  <b-icon id="red-color" icon="x-circle-fill"></b-icon>
+                </div>
+                <div class="col-10 text-ans">
+                  {{ option.text }}
+                </div>
+              </div>
+            </b-button>
+            <b-button v-else class="ans-option-btn" variant="primary">
+              <div class="row">
+                <div class="col-2 icon-ans">
+                  <b-icon icon="circle"></b-icon>
+                </div>
+                <div class="col-10 text-ans">
+                  {{ option.text }}
+                </div>
+              </div>
+            </b-button>
+          </div>
+        </div>
+        <div v-else class="answer-section">
           <b-button
-            v-if="option.isCorrect"
-            id="correct-ans"
+            v-for="(option, index) in question.options"
+            :key="index"
             class="ans-option-btn"
             variant="primary"
+            @click="handleAnswerClick(option.isCorrect, index)"
           >
-            <div class="row">
-              <div class="col-2 icon-ans">
-                <b-icon id="green-color" icon="check-circle-fill"></b-icon>
-              </div>
-              <div class="col-10 text-ans">
-                {{ option.text }}
-              </div>
-            </div>
-          </b-button>
-          <b-button
-            v-else-if="!option.isCorrect && option.selected"
-            id="wrong-ans"
-            class="ans-option-btn"
-            variant="primary"
-          >
-            <div class="row">
-              <div class="col-2 icon-ans">
-                <b-icon id="red-color" icon="x-circle-fill"></b-icon>
-              </div>
-              <div class="col-10 text-ans">
-                {{ option.text }}
-              </div>
-            </div>
-          </b-button>
-          <b-button v-else class="ans-option-btn" variant="primary">
             <div class="row">
               <div class="col-2 icon-ans">
                 <b-icon icon="circle"></b-icon>
@@ -74,29 +98,12 @@
           </b-button>
         </div>
       </div>
-      <div v-else class="answer-section">
-        <b-button
-          v-for="(option, index) in currentQuestion.options"
-          :key="index"
-          class="ans-option-btn"
-          variant="primary"
-          @click="handleAnswerClick(option.isCorrect, index)"
-        >
-          <div class="row">
-            <div class="col-2 icon-ans">
-              <b-icon icon="circle"></b-icon>
-            </div>
-            <div class="col-10 text-ans">
-              {{ option.text }}
-            </div>
-          </div>
-        </b-button>
-      </div>
     </div>
   </div>
 </template>
 
 <script>
+import apiInterface from "~/api/apiInterface.js";
 import Dummy from "~/assets/AlBaqarah.json";
 
 export default {
@@ -106,18 +113,37 @@ export default {
       maxTime: 25,
       countDown: 25,
       questionNumber: 1,
-      currentQuestion: null,
+      question: null,
       juzData: null,
       surah: null,
       showResult: false,
       score: 0,
+      isLoading: true,
+      review: {},
     };
   },
   created() {
     this.juzData = Dummy.data[0].ayahs;
-    this.surah = this.$route.params.chosen;
-    this.currentQuestion = this.getQuestion();
+    if (this.$route.params.type == "Verse") {
+      this.question = this.getQuestionAyah();
+      this.surah = this.question.surah;
+    } else {
+      this.question = this.getQuestionWord();
+      this.surah = this.question.title;
+    }
     this.countDownTimer();
+
+    // console.log(this.$store.state.question);
+    // if (this.$store.state.question == null) {
+    //   this.getQuestion();
+    //   this.surah = this.$route.params.chosen;
+    // } else {
+    //   this.surah = this.$store.state.question.conf.number;
+    //   this.question = this.$store.state.question.currentQuestion;
+    //   this.questionNumber = this.$store.state.question.questionNumber;
+    //   this.countDown = this.$store.state.countDown;
+    //   this.isLoading = false;
+    // }
   },
   methods: {
     countDownTimer() {
@@ -130,12 +156,28 @@ export default {
         this.handleAnswerClick(false);
       }
     },
-    getQuestion() {
+    async getQuestionWord() {
+      await apiInterface
+        .getQuestion({
+          mode: this.$route.params.type.toLowerCase(),
+          type: this.$route.params.basedOn.toLowerCase(),
+          number: this.$route.params.chosen,
+        })
+        .then((response) => {
+          this.question = response.data;
+          this.isLoading = false;
+          clearTimeout(this.timer);
+        });
+    },
+    getQuestionAyah() {
       var currentAyah = Math.floor(Math.random() * this.juzData.length - 1);
       var question = {
         text: this.juzData[currentAyah].text,
+        surah: this.juzData[currentAyah].surah,
+        verseNumber: this.juzData[currentAyah].number,
         options: this.getOption(currentAyah),
       };
+      this.isLoading = false;
       return question;
     },
     getOption(currentAyah) {
@@ -177,10 +219,15 @@ export default {
       if (this.showResult) return; // prevent user clicked button when state is showing result
 
       clearTimeout(this.timer);
+      this.review[this.questionNumber - 1] = {
+        name: this.question.surah,
+        verseNum: this.question.verseNumber,
+        isCorrect: isCorrect,
+      };
 
       // handling if time is out and user not answered
       if (this.countDown > 0) {
-        this.currentQuestion.options[index].selected = true;
+        this.question.options[index].selected = true;
       }
       if (isCorrect) {
         this.score++;
@@ -189,15 +236,23 @@ export default {
       setTimeout(() => {
         if (this.questionNumber + 1 <= 10) {
           this.questionNumber++;
-          this.currentQuestion = this.getQuestion();
+          if (this.$route.params.type == "Verse") {
+            this.question = this.getQuestionAyah();
+            this.surah = this.question.surah;
+          } else {
+            this.question = this.getQuestionWord();
+            this.surah = this.question.title;
+          }
           this.countDown = this.maxTime;
           this.countDownTimer();
         } else {
+          this.$store.commit("SET_PLAY_RESULT", {
+            review: this.review,
+            totalQuestion: this.questionNumber,
+            totalCorrectness: this.score,
+          });
           this.$router.push({
             name: "play-personal-test-result",
-            params: {
-              score: this.score,
-            },
           });
         }
         this.showResult = false;

@@ -86,7 +86,6 @@ export default {
           .then((response) => {
             let access_token = response.data.key;
             let expired = 60 * 60 * 1000;
-            console.log(access_token);
             cookie.set("token", access_token, { expires: expired });
             this.$store.commit("SET_USER", {
               username: this.username,
