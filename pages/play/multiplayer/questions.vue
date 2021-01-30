@@ -161,6 +161,7 @@ export default {
         verseNumber: this.juzData[currentAyah].number,
         options: this.getOption(currentAyah),
       };
+      this.isLoading = false;
       return question;
     },
     getOption(currentAyah) {
