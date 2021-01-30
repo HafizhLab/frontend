@@ -121,26 +121,20 @@ export default {
     };
   },
   created() {
-    if (this.$store.state.question == null) {
-      this.getQuestion();
-      console.log(this.question);
-      this.surah = this.$route.params.chosen;
+    this.surah = this.$route.params.chosen;
+    this.question = this.getQuestion();
 
-      this.$store.commit("SET_QUESTION", {
-        conf: {
-          mode: this.$route.params.type,
-          type: this.$route.params.basedOn,
-          number: this.$route.params.chosen,
-        },
-        currentQuestion: this.question,
-        questionNumber: this.questionNumber,
-      });
-    } else {
-      this.surah = this.$store.state.question.conf.number;
-      this.question = this.$store.state.question.currentQuestion;
-      this.questionNumber = this.$store.state.question.questionNumber;
-      this.countDown = this.$store.state.countDown;
-    }
+    // console.log(this.$store.state.question);
+    // if (this.$store.state.question == null) {
+    //   this.getQuestion();
+    //   this.surah = this.$route.params.chosen;
+    // } else {
+    //   this.surah = this.$store.state.question.conf.number;
+    //   this.question = this.$store.state.question.currentQuestion;
+    //   this.questionNumber = this.$store.state.question.questionNumber;
+    //   this.countDown = this.$store.state.countDown;
+    //   this.isLoading = false;
+    // }
   },
   methods: {
     countDownTimer() {
