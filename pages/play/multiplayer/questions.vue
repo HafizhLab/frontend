@@ -107,12 +107,14 @@ export default {
       countDown: 25,
       questionNumber: 1,
       currentQuestion: null,
+      currentVerseNumber: null,
       juzData: null,
       surah: null,
       showResult: false,
       score: 0,
       correctCount: 0,
       averageTime: 0,
+      review: {},
     };
   },
   created() {
@@ -136,6 +138,8 @@ export default {
       var currentAyah = Math.floor(Math.random() * this.juzData.length - 1);
       var question = {
         text: this.juzData[currentAyah].text,
+        surah: this.juzData[currentAyah].surah,
+        verseNumber: this.juzData[currentAyah].number,
         options: this.getOption(currentAyah),
       };
       return question;
@@ -179,6 +183,11 @@ export default {
       if (this.showResult) return; // prevent user clicked button when state is showing result
 
       clearTimeout(this.timer);
+      this.review[this.questionNumber - 1] = {
+        name: this.currentQuestion.surah,
+        verseNum: this.currentQuestion.verseNumber,
+        isCorrect: isCorrect,
+      };
 
       // handling if time is out and user not answered
       if (this.countDown > 0) {
@@ -199,6 +208,9 @@ export default {
           this.countDown = this.maxTime;
           this.countDownTimer();
         } else {
+          this.$store.commit("SET_PLAY_RESULT", {
+            review: this.review,
+          });
           this.$router.push({
             name: "play-multiplayer-result",
             params: {

@@ -4,18 +4,23 @@
 
 export const state = () => ({
   user: null,
-  question: null,
-  countDown: null,
+  listChallenge: [
+    { id: 0, name: "Al-Baqarah #1", num_of_questions: 3 },
+    { id: 1, name: "Ali-Imran #2", num_of_questions: 5 },
+    { id: 2, name: "Al-Baqarah #3", num_of_questions: 3 },
+    { id: 3, name: "Juz #3", num_of_questions: 10 },
+  ],
+  playResult: null,
 });
 
 export const mutations = {
   SET_USER(state, data) {
     state.user = data;
   },
-  SET_QUESTION(state, data) {
-    state.question = data;
+  ADD_CHALLENGE(state, data) {
+    state.listChallenge.push(data);
   },
-  SET_COUNTDOWN(state, data) {
-    state.countDown = data;
+  SET_PLAY_RESULT(state, data) {
+    state.playResult = data;
   },
 };
