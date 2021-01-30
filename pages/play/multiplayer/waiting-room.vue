@@ -15,7 +15,16 @@
       <h5>
         <strong>1/{{ room.maxPlayer }} players</strong>
       </h5>
-      <nuxt-link to="/play/multiplayer/questions">
+      <nuxt-link
+        :to="{
+          name: 'play-multiplayer-questions',
+          params: {
+            testType: room.testType,
+            basedOn: room.testBasedOn,
+            chosen: room.chosen,
+          },
+        }"
+      >
         <b-button variant="primary" class="pl-5 pr-5"><p>Start</p></b-button>
       </nuxt-link>
     </div>

@@ -57,7 +57,7 @@
             <img
               src="~/assets/img/NavMenu/play_active.png"
               alt="PlayButton"
-              class="inline-block"
+              class="play-icon inline-block"
               height="27"
               width="27"
             />
@@ -67,7 +67,7 @@
             <img
               src="~/assets/img/NavMenu/play_default.png"
               alt="PlayButton"
-              class="inline-block"
+              class="play-icon inline-block"
               height="27"
               width="27"
             />
@@ -77,7 +77,7 @@
       </b-col>
 
       <b-col class="text-center">
-        <nuxt-link to="/progress">
+        <nuxt-link to="/progress/surah">
           <div v-if="$route.name.startsWith('progress')">
             <img
               src="~/assets/img/NavMenu/memo_active.png"
@@ -164,6 +164,7 @@ export default {};
   position: fixed;
   bottom: 0;
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.3);
+  z-index: 100;
 }
 
 .nav-items {
@@ -179,5 +180,14 @@ export default {};
 
 .nav-text-active {
   color: #49c0db;
+}
+
+.play-icon {
+  width: 4rem;
+  margin-top: -25px;
+  height: auto;
+  filter: drop-shadow(0px 0px 8px rgba(0, 0, 0, 0.25));
+  border: 1px solid #ffffff;
+  border-radius: 100%;
 }
 </style>

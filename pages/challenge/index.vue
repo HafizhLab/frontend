@@ -7,12 +7,12 @@
     </div>
     <div class="challenge-menu container">
       <div class="px-4 py-1 row">
-        <b-button variant="primary">
-          Create a new challenge
-          <nuxt-link to="/challenge/create">
+        <nuxt-link to="/challenge/create" class="w-100">
+          <b-button variant="primary">
+            Create a new challenge
             <b-icon icon="chevron-right" class="ml-5 mr-0"></b-icon>
-          </nuxt-link>
-        </b-button>
+          </b-button>
+        </nuxt-link>
       </div>
       <div class="challenge-container row px-4 pr-0 py-1">
         <div
@@ -42,11 +42,7 @@ export default {
   methods: {
     getChallengeList() {
       // Dummy data
-      return [
-        { id: 0, name: "Al-Baqarah #1", num_of_questions: 3 },
-        { id: 1, name: "Al-Baqarah #2", num_of_questions: 5 },
-        { id: 2, name: "Al-Baqarah #3", num_of_questions: 3 },
-      ];
+      return this.$store.state.listChallenge;
     },
   },
 };

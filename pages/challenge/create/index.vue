@@ -3,13 +3,21 @@
     <div class="title pb-3">
       <div class="container">
         <h3>
-          <nuxt-link to="/play/multiplayer"
+          <nuxt-link to="/challenge"
             ><b-icon icon="chevron-left" class="mr-3"></b-icon></nuxt-link
-          >Create Room
+          >Create Challenge
         </h3>
       </div>
     </div>
     <div class="main-menu mt-4 container">
+      <div class="name my-4 w-100">
+        <h5 class="mb-3">Name</h5>
+        <input
+          v-model="name"
+          :list="simpleSuggestionList"
+          placeholder="Type challenge name"
+        />
+      </div>
       <div class="type">
         <h5>Test Type</h5>
         <b-button
@@ -42,32 +50,18 @@
           v-model="chosen"
           :list="simpleSuggestionList"
           :filter-by-query="true"
-          display-attribute="name"
-          value-attribute="number"
           placeholder="Search..."
-          max-suggestions="114"
         ></vue-simple-suggest>
-      </div>
-      <div class="max mt-4">
-        <h5 class="mb-3">Max Players (2 - 10 players)</h5>
-        <b-input
-          v-model.number="maxPlayer"
-          class="input-num"
-          type="number"
-          min="2"
-          max="10"
-        ></b-input>
       </div>
       <div class="button-start text-center mt-3">
         <nuxt-link
           :to="{
-            name: 'play-multiplayer-waiting-room',
+            name: 'challenge-create-questions',
             params: {
               type: testType,
               basedOn: testBasedOn,
               chosen: chosen,
-              max: maxPlayer,
-              code: code,
+              name: name,
             },
           }"
         >
@@ -79,7 +73,6 @@
 </template>
 
 <script>
-import apiInterface from "~/api/apiInterface.js";
 import VueSimpleSuggest from "vue-simple-suggest";
 import "vue-simple-suggest/dist/styles.css";
 
@@ -89,59 +82,13 @@ export default {
   },
   data() {
     return {
+      name: "",
       testType: "Verse",
       testBasedOn: "Surah",
       chosen: "",
-      maxPlayer: 2,
-      surahList: [],
-      juzList: [],
     };
   },
-  computed: {
-    code() {
-      return (
-        "" +
-        Math.floor(Math.random() * 10) +
-        Math.floor(Math.random() * 10) +
-        Math.floor(Math.random() * 10) +
-        Math.floor(Math.random() * 10)
-      );
-    },
-    simpleSuggestionList() {
-      if (this.testBasedOn == "Surah") {
-        return this.surahList;
-      } else {
-        return this.juzList;
-      }
-    },
-  },
-  created() {
-    this.getSurahList();
-    this.getJuzList();
-  },
   methods: {
-    getSurahList() {
-      apiInterface.getQuranMeta().then((response) => {
-        var result = [];
-        response.data.data.surahs.references.forEach((surah) => {
-          result.push({
-            number: surah.number,
-            name: surah.englishName,
-          });
-        });
-        this.surahList = result;
-      });
-    },
-    getJuzList() {
-      var result = [];
-      for (var i = 1; i <= 30; i++) {
-        result.push({
-          number: i,
-          name: `Juz ${i}`,
-        });
-      }
-      this.juzList = result;
-    },
     switchTestType(type) {
       if (this.testType == "Verse" && type != "verse") {
         this.testType = "Word";
@@ -155,7 +102,19 @@ export default {
       } else if (this.testBasedOn == "Juz" && type != "juz") {
         this.testBasedOn = "Surah";
       }
-      this.chosen = "";
+    },
+    simpleSuggestionList() {
+      if (this.testBasedOn == "Surah") {
+        return [
+          "Al-Faatihah",
+          "Al-Baqarah",
+          "Ali-Imran",
+          "An-Nisaa",
+          "Al-Maaidah",
+        ];
+      } else {
+        return ["Juz 1", "Juz 2", "Juz 3", "Juz 4", "Juz 5"];
+      }
     },
   },
 };
@@ -212,6 +171,11 @@ a:hover {
   color: black;
 }
 
+.name input {
+  width: 100%;
+}
+
+.name input,
 .vue-simple-suggest.designed .input-wrapper input {
   border-radius: 2rem;
   padding: 1rem;
@@ -221,20 +185,18 @@ a:hover {
   filter: drop-shadow(0px 2px 6px rgba(0, 0, 0, 0.15));
 }
 
+.name input:focus,
 .vue-simple-suggest.designed .input-wrapper input:focus {
   border-radius: 2rem;
   padding: 1rem;
   padding-left: 2rem;
   padding-right: 2rem;
   border: 1px solid #49c0db;
+  outline: 0;
 }
 
 .vue-simple-suggest.designed .suggestions {
   max-height: 10rem;
   overflow-y: scroll;
-}
-
-.input-num {
-  text-align: center;
 }
 </style>

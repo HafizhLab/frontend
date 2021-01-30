@@ -7,15 +7,20 @@
       <div class="input-group">
         <div class="input-group-prepend">
           <span class="input-group-text border-right-0">
-            <img src="~/assets/img/form_email.png" />
+            <img src="~/assets/img/form_user.png" />
           </span>
         </div>
         <input
-          v-model="email"
-          type="email"
+          v-model="username"
+          type="text"
           class="simple-form form-control border-left-0"
-          placeholder="Email"
+          placeholder="Username"
         />
+      </div>
+      <div v-if="errors.username.length" class="error-text mt-2 mx-auto">
+        <div v-for="error in errors.username" :key="error">
+          <p class="mb-0">{{ error }}</p>
+        </div>
       </div>
       <div class="input-group">
         <div class="input-group-prepend">
@@ -30,8 +35,13 @@
           placeholder="Password"
         />
       </div>
+      <div v-if="errors.password.length" class="error-text mt-2 mx-auto">
+        <div v-for="error in errors.password" :key="error">
+          <p class="mb-0">{{ error }}</p>
+        </div>
+      </div>
       <div class="button-login text-center mt-3">
-        <b-button variant="primary">Login</b-button>
+        <b-button variant="primary" @click="login()">Login</b-button>
         <p>
           Don’t have an account?
           <span class="highlight">
@@ -44,14 +54,58 @@
 </template>
 
 <script>
+import apiInterface from "~/api/apiInterface.js";
+import cookie from "js-cookie";
+
 export default {
   components: {},
   data() {
     return {
-      name: "",
-      email: "",
+      username: "",
       password: "",
+      errors: {
+        username: [],
+        password: [],
+      },
     };
+  },
+  methods: {
+    login() {
+      this.errors.username = [];
+      this.errors.password = [];
+      if (this.$store.state.user) {
+        this.$router.push({
+          path: "/",
+        });
+      } else {
+        apiInterface
+          .login({
+            username: this.username,
+            password: this.password,
+          })
+          .then((response) => {
+            let access_token = response.data.key;
+            let expired = 60 * 60 * 1000;
+            cookie.set("token", access_token, { expires: expired });
+            this.$store.commit("SET_USER", {
+              username: this.username,
+            });
+            this.$router.push({
+              path: "/",
+            });
+          })
+          .catch((error) => {
+            console.log(error);
+            for (const e in error.response.data) {
+              if (`${e}` === "username") {
+                this.errors.username.push(`${error.response.data[e]}`);
+              } else {
+                this.errors.password.push(`${error.response.data[e]}`);
+              }
+            }
+          });
+      }
+    },
   },
 };
 </script>
