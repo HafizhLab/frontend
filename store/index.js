@@ -10,6 +10,7 @@ export const state = () => ({
     { id: 2, name: "Al-Baqarah #3", num_of_questions: 3 },
     { id: 3, name: "Juz #3", num_of_questions: 10 },
   ],
+  playResult: null,
 });
 
 export const mutations = {
@@ -18,6 +19,9 @@ export const mutations = {
   },
   ADD_CHALLENGE(state, data) {
     state.listChallenge.push(data);
+  },
+  SET_PLAY_RESULT(state, data) {
+    state.playResult = data;
   },
 };
 
