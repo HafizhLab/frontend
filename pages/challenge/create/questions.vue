@@ -7,12 +7,14 @@
         </nuxt-link>
         {{ name }}
       </h5>
-      <nuxt-link to="/challenge">
-        <h5>
-          Create
-          <b-icon icon="chevron-right" class="ml-2"></b-icon>
-        </h5>
-      </nuxt-link>
+      <h5>
+        Create
+        <b-icon
+          icon="chevron-right"
+          class="ml-2"
+          @click="createChallenge()"
+        ></b-icon>
+      </h5>
     </div>
     <h5 style="margin-left: 2.5rem">By {{ type }} : {{ chosen }}</h5>
     <div class="questions-label mt-5">
@@ -208,6 +210,14 @@ export default {
           }
         }
       }
+    },
+    createChallenge() {
+      this.$store.commit("ADD_CHALLENGE", {
+        id: 0,
+        name: this.name,
+        num_of_questions: this.questionNumber,
+      });
+      this.$router.push("/challenge");
     },
   },
 };
