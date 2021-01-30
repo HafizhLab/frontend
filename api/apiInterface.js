@@ -1,14 +1,14 @@
-import { be, quran } from "~/api/config";
+import { be, quran, auth } from "~/api/config";
 
 export default {
   /* Auth */
 
   register(data) {
-    return be.post("/api/v1/auth/registration/", data);
+    return auth.post("/api/v1/auth/registration/", data);
   },
 
   login(data) {
-    return be.post("/api/v1/auth/login/", data);
+    return auth.post("/api/v1/auth/login/", data);
   },
 
   verifyToken(data) {
