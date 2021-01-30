@@ -94,13 +94,13 @@
 </template>
 
 <script>
-import Dummy from "~/assets/AlBaqarah.json";
+import surahData from "~/assets/juzData.json";
 
 export default {
   data() {
     return {
-      memo_value: 7,
-      test_value: 5,
+      memo_value: 0,
+      test_value: 0,
       max: null,
       surah: null,
       ayatData: null,
@@ -120,10 +120,14 @@ export default {
   methods: {
     getAyat() {
       let surah = this.surah;
-      let surahData = Dummy.data[0].ayahs.filter(function (ayat) {
-        return ayat.surah === surah.name;
-      });
-      return surahData.map(function (ayat) {
+      var data = [];
+      for (let i = 0; i < surahData.data.length; i++) {
+        var filterSurah = surahData.data[i].ayahs.filter(function (ayat) {
+          return ayat.surah === surah.name;
+        });
+        data = [...data, ...filterSurah];
+      }
+      return data.map(function (ayat) {
         return ayat.text;
       });
     },
@@ -139,14 +143,20 @@ export default {
       if (e.classList.contains("white")) {
         e.classList.remove("white");
         e.classList.add("blue");
+        this.memo_value += 1;
       } else {
         e.classList.remove("blue");
         e.classList.add("white");
+        this.memo_value -= 1;
       }
     },
     onSubmit(event) {
       event.preventDefault();
-      // submit
+      if (this.form.verseto >= this.form.versefrom) {
+        for (let i = this.form.versefrom; i <= this.form.verseto; i++) {
+          this.checkButton("button" + (i - 1));
+        }
+      }
       this.$refs["modal-memo"].hide();
     },
   },
