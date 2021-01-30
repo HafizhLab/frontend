@@ -25,7 +25,7 @@
     </div>
     <div class="main mt-3 pt-4 pb-3 container">
       <h5>
-        <strong>{{ currentQuestion.title }}</strong>
+        <strong>{{ surah }}</strong>
       </h5>
       <div class="question-section pt-3 pb-3">
         <h3>{{ currentQuestion.text }}</h3>
@@ -98,7 +98,7 @@
 
 <script>
 import apiInterface from "~/api/apiInterface.js";
-// import Dummy from "~/assets/AlBaqarah.json";
+import Dummy from "~/assets/AlBaqarah.json";
 
 export default {
   data() {
@@ -119,8 +119,14 @@ export default {
     };
   },
   created() {
-    this.surah = this.$route.params.chosen;
-    this.currentQuestion = this.getQuestion();
+    this.juzData = Dummy.data[0].ayahs;
+    if (this.$route.params.testType == "Verse") {
+      this.currentQuestion = this.getQuestionAyah();
+      this.surah = this.currentQuestion.surah;
+    } else {
+      this.currentQuestion = this.getQuestionWord();
+      this.surah = this.currentQuestion.title;
+    }
     this.countDownTimer();
   },
   methods: {
@@ -134,7 +140,7 @@ export default {
         this.handleAnswerClick(false);
       }
     },
-    async getQuestion() {
+    async getQuestionWord() {
       await apiInterface
         .getQuestion({
           mode: this.$route.params.testType.toLowerCase(),
@@ -142,11 +148,20 @@ export default {
           number: this.$route.params.chosen,
         })
         .then((response) => {
-          this.currentQuestion = response.data;
+          this.question = response.data;
           this.isLoading = false;
           clearTimeout(this.timer);
-          this.countDownTimer();
         });
+    },
+    getQuestionAyah() {
+      var currentAyah = Math.floor(Math.random() * this.juzData.length - 1);
+      var question = {
+        text: this.juzData[currentAyah].text,
+        surah: this.juzData[currentAyah].surah,
+        verseNumber: this.juzData[currentAyah].number,
+        options: this.getOption(currentAyah),
+      };
+      return question;
     },
     getOption(currentAyah) {
       var arrNum = [
@@ -208,7 +223,13 @@ export default {
       setTimeout(() => {
         if (this.questionNumber + 1 <= 10) {
           this.questionNumber++;
-          this.currentQuestion = this.getQuestion();
+          if (this.$route.params.testType == "Verse") {
+            this.currentQuestion = this.getQuestionAyah();
+            this.surah = this.currentQuestion.surah;
+          } else {
+            this.currentQuestion = this.getQuestionWord();
+            this.surah = this.currentQuestion.title;
+          }
           this.countDown = this.maxTime;
           this.countDownTimer();
         } else {

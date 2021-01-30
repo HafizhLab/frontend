@@ -104,7 +104,7 @@
 
 <script>
 import apiInterface from "~/api/apiInterface.js";
-// import Dummy from "~/assets/AlBaqarah.json";
+import Dummy from "~/assets/AlBaqarah.json";
 
 export default {
   data() {
@@ -114,15 +114,24 @@ export default {
       countDown: 25,
       questionNumber: 1,
       question: null,
+      juzData: null,
       surah: null,
       showResult: false,
       score: 0,
       isLoading: true,
+      review: {},
     };
   },
   created() {
-    this.surah = this.$route.params.chosen;
-    this.question = this.getQuestion();
+    this.juzData = Dummy.data[0].ayahs;
+    if (this.$route.params.type == "Verse") {
+      this.question = this.getQuestionAyah();
+      this.surah = this.question.surah;
+    } else {
+      this.question = this.getQuestionWord();
+      this.surah = this.question.title;
+    }
+    this.countDownTimer();
 
     // console.log(this.$store.state.question);
     // if (this.$store.state.question == null) {
@@ -147,7 +156,7 @@ export default {
         this.handleAnswerClick(false);
       }
     },
-    async getQuestion() {
+    async getQuestionWord() {
       await apiInterface
         .getQuestion({
           mode: this.$route.params.type.toLowerCase(),
@@ -158,16 +167,60 @@ export default {
           this.question = response.data;
           this.isLoading = false;
           clearTimeout(this.timer);
-          this.countDownTimer();
         });
+    },
+    getQuestionAyah() {
+      var currentAyah = Math.floor(Math.random() * this.juzData.length - 1);
+      var question = {
+        text: this.juzData[currentAyah].text,
+        surah: this.juzData[currentAyah].surah,
+        verseNumber: this.juzData[currentAyah].number,
+        options: this.getOption(currentAyah),
+      };
+      return question;
+    },
+    getOption(currentAyah) {
+      var arrNum = [
+        currentAyah + 1,
+        currentAyah + 2,
+        currentAyah + 3,
+        currentAyah + 4,
+      ];
+      var currentIndex = arrNum.length,
+        temporaryValue,
+        randomIndex;
+
+      // While there remain elements to shuffle...
+      while (0 !== currentIndex) {
+        // Pick a remaining element...
+        randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex -= 1;
+
+        // And swap it with the current element.
+        temporaryValue = arrNum[currentIndex];
+        arrNum[currentIndex] = arrNum[randomIndex];
+        arrNum[randomIndex] = temporaryValue;
+      }
+
+      var options = [];
+      arrNum.forEach((num) => {
+        var option = {
+          text: this.juzData[num].text,
+          isCorrect: false,
+          selected: false,
+        };
+        if (num - currentAyah == 1) option.isCorrect = true;
+        options.push(option);
+      });
+      return options;
     },
     handleAnswerClick(isCorrect, index) {
       if (this.showResult) return; // prevent user clicked button when state is showing result
 
       clearTimeout(this.timer);
       this.review[this.questionNumber - 1] = {
-        name: this.currentQuestion.surah,
-        verseNum: this.currentQuestion.verseNumber,
+        name: this.question.surah,
+        verseNum: this.question.verseNumber,
         isCorrect: isCorrect,
       };
 
@@ -182,7 +235,13 @@ export default {
       setTimeout(() => {
         if (this.questionNumber + 1 <= 10) {
           this.questionNumber++;
-          this.question = this.getQuestion();
+          if (this.$route.params.type == "Verse") {
+            this.question = this.getQuestionAyah();
+            this.surah = this.question.surah;
+          } else {
+            this.question = this.getQuestionWord();
+            this.surah = this.question.title;
+          }
           this.countDown = this.maxTime;
           this.countDownTimer();
         } else {
