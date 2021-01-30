@@ -19,7 +19,7 @@
         </div>
       </div>
       <b-progress :max="10" height="1.3rem">
-        <b-progress-bar :value="4"> </b-progress-bar>
+        <b-progress-bar :value="totalCorrectness"> </b-progress-bar>
       </b-progress>
       <div class="review-section mt-3">
         <div v-for="(item, index) in review" :key="index" class="review-item">
@@ -105,6 +105,12 @@ export default {
       totalQuestion: 10,
       totalCorrectness: 4,
     };
+  },
+  created() {
+    var result = this.$store.state.playResult;
+    this.review = result.review;
+    this.totalQuestion = result.totalQuestion;
+    this.totalCorrectness = result.totalCorrectness;
   },
 };
 </script>
