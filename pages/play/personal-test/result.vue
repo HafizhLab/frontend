@@ -26,7 +26,8 @@
           <div class="row">
             <div class="col-9">
               <h6>
-                {{ index + 1 }}. {{ item.name }} verse {{ item.verseNum }}
+                {{ parseInt(index) + 1 }}. {{ item.name }} verse
+                {{ item.verseNum }}
               </h6>
             </div>
             <div class="col-3">
@@ -109,6 +110,7 @@ export default {
   created() {
     var result = this.$store.state.playResult;
     this.review = result.review;
+    console.log(this.review);
     this.totalQuestion = result.totalQuestion;
     this.totalCorrectness = result.totalCorrectness;
   },
