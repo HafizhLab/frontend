@@ -110,7 +110,6 @@ export default {
   created() {
     var result = this.$store.state.playResult;
     this.review = result.review;
-    console.log(this.review);
     this.totalQuestion = result.totalQuestion;
     this.totalCorrectness = result.totalCorrectness;
   },

@@ -124,6 +124,7 @@ export default {
       isLoading: true,
       review: {},
       mode: null,
+      totalQuestion: 0,
     };
   },
   created() {
@@ -131,11 +132,11 @@ export default {
     if (this.$route.params.type == "Verse") {
       this.question = this.getQuestionAyah();
       this.surah = this.question.surah;
+      this.countDownTimer();
     } else {
       this.mode = this.$route.params.type;
       this.getQuestion();
     }
-    this.countDownTimer();
   },
   methods: {
     countDownTimer() {
@@ -149,8 +150,10 @@ export default {
       }
     },
     getQuestionByWord() {
+      this.totalQuestion += 1;
       this.question = this.currentAyah.questions[this.counter];
       this.surah = this.question.title;
+      this.countDownTimer();
     },
     async getQuestion() {
       await apiInterface
@@ -171,6 +174,7 @@ export default {
         });
     },
     getQuestionAyah() {
+      this.totalQuestion += 1;
       var currentAyah = Math.floor(Math.random() * this.juzData.length - 1);
       var question = {
         text: this.juzData[currentAyah].text,
@@ -227,12 +231,6 @@ export default {
           verseNum: this.question.verseNumber,
           isCorrect: isCorrect,
         };
-      } else {
-        this.review[this.questionNumber - 1] = {
-          name: this.currentAyah.title,
-          verseNum: this.currentAyah.number,
-          isCorrect: isCorrect,
-        };
       }
 
       // handling if time is out and user not answered
@@ -265,6 +263,11 @@ export default {
             this.countDownTimer();
           }
         } else {
+          this.$store.commit("SET_PLAY_RESULT", {
+            review: this.review,
+            totalQuestion: this.totalQuestion,
+            totalCorrectness: this.score,
+          });
           this.$router.push({
             name: "play-personal-test-result",
           });
