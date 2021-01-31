@@ -97,6 +97,7 @@
 </template>
 
 <script>
+import apiInterface from "~/api/apiInterface.js";
 import Dummy from "~/assets/AlBaqarah.json";
 
 export default {
@@ -119,8 +120,13 @@ export default {
   },
   created() {
     this.juzData = Dummy.data[0].ayahs;
-    this.surah = this.$route.params.chosen;
-    this.currentQuestion = this.getQuestion();
+    if (this.$route.params.testType == "Verse") {
+      this.currentQuestion = this.getQuestionAyah();
+      this.surah = this.currentQuestion.surah;
+    } else {
+      this.currentQuestion = this.getQuestionWord();
+      this.surah = this.currentQuestion.title;
+    }
     this.countDownTimer();
   },
   methods: {
@@ -134,7 +140,20 @@ export default {
         this.handleAnswerClick(false);
       }
     },
-    getQuestion() {
+    async getQuestionWord() {
+      await apiInterface
+        .getQuestion({
+          mode: this.$route.params.testType.toLowerCase(),
+          type: this.$route.params.basedOn.toLowerCase(),
+          number: this.$route.params.chosen,
+        })
+        .then((response) => {
+          this.question = response.data;
+          this.isLoading = false;
+          clearTimeout(this.timer);
+        });
+    },
+    getQuestionAyah() {
       var currentAyah = Math.floor(Math.random() * this.juzData.length - 1);
       var question = {
         text: this.juzData[currentAyah].text,
@@ -142,6 +161,7 @@ export default {
         verseNumber: this.juzData[currentAyah].number,
         options: this.getOption(currentAyah),
       };
+      this.isLoading = false;
       return question;
     },
     getOption(currentAyah) {
@@ -204,7 +224,13 @@ export default {
       setTimeout(() => {
         if (this.questionNumber + 1 <= 10) {
           this.questionNumber++;
-          this.currentQuestion = this.getQuestion();
+          if (this.$route.params.testType == "Verse") {
+            this.currentQuestion = this.getQuestionAyah();
+            this.surah = this.currentQuestion.surah;
+          } else {
+            this.currentQuestion = this.getQuestionWord();
+            this.surah = this.currentQuestion.title;
+          }
           this.countDown = this.maxTime;
           this.countDownTimer();
         } else {

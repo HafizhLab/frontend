@@ -30,7 +30,7 @@
       </div>
       <div class="main mt-3 pt-4 pb-3 container">
         <h5>
-          <strong>{{ currentAyah.title }}</strong>
+          <strong>{{ surah }}</strong>
         </h5>
         <div class="question-section pt-3 pb-3">
           <h3>{{ question.text }}</h3>
@@ -104,7 +104,7 @@
 
 <script>
 import apiInterface from "~/api/apiInterface.js";
-// import Dummy from "~/assets/AlBaqarah.json";
+import Dummy from "~/assets/AlBaqarah.json";
 
 export default {
   data() {
@@ -117,17 +117,26 @@ export default {
       question: null,
       currentAyah: null,
       partialQuestion: "",
+      juzData: null,
       surah: null,
       showResult: false,
       score: 0,
       isLoading: true,
+      review: {},
       mode: null,
     };
   },
   created() {
-    this.mode = this.$route.params.type;
-    this.surah = this.$route.params.chosen;
-    this.getQuestion();
+    this.juzData = Dummy.data[0].ayahs;
+    if (this.$route.params.type == "Verse") {
+      this.question = this.getQuestionAyah();
+      this.surah = this.question.surah;
+    } else {
+      this.mode = this.$route.params.type;
+      this.getQuestion();
+      this.surah = this.question.title;
+    }
+    this.countDownTimer();
   },
   methods: {
     countDownTimer() {
@@ -159,13 +168,74 @@ export default {
           }
           this.isLoading = false;
           clearTimeout(this.timer);
-          this.countDownTimer();
         });
+    },
+    getQuestionAyah() {
+      var currentAyah = Math.floor(Math.random() * this.juzData.length - 1);
+      var question = {
+        text: this.juzData[currentAyah].text,
+        surah: this.juzData[currentAyah].surah,
+        verseNumber: this.juzData[currentAyah].number,
+        options: this.getOption(currentAyah),
+      };
+      this.isLoading = false;
+      return question;
+    },
+    getOption(currentAyah) {
+      var arrNum = [
+        currentAyah + 1,
+        currentAyah + 2,
+        currentAyah + 3,
+        currentAyah + 4,
+      ];
+      var currentIndex = arrNum.length,
+        temporaryValue,
+        randomIndex;
+
+      // While there remain elements to shuffle...
+      while (0 !== currentIndex) {
+        // Pick a remaining element...
+        randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex -= 1;
+
+        // And swap it with the current element.
+        temporaryValue = arrNum[currentIndex];
+        arrNum[currentIndex] = arrNum[randomIndex];
+        arrNum[randomIndex] = temporaryValue;
+      }
+
+      var options = [];
+      arrNum.forEach((num) => {
+        var option = {
+          text: this.juzData[num].text,
+          isCorrect: false,
+          selected: false,
+        };
+        if (num - currentAyah == 1) option.isCorrect = true;
+        options.push(option);
+      });
+      return options;
     },
     handleAnswerClick(isCorrect, index) {
       if (this.showResult) return; // prevent user clicked button when state is showing result
 
       clearTimeout(this.timer);
+
+      if (this.$route.params.type == "Verse") {
+        this.review[this.questionNumber - 1] = {
+          name: this.question.surah,
+          verseNum: this.question.verseNumber,
+          isCorrect: isCorrect,
+        };
+      } else {
+        this.review[this.questionNumber - 1] = {
+          name: this.currentAyah.title,
+          verseNum: this.currentAyah.number,
+          isCorrect: isCorrect,
+        };
+      }
+
+      // handling if time is out and user not answered
       if (this.countDown > 0) {
         this.question.options[index].selected = true;
       }
@@ -176,7 +246,7 @@ export default {
       setTimeout(() => {
         if (this.questionNumber + 1 <= 10) {
           if (
-            this.mode == "Word" &&
+            this.$route.params.type == "Word" &&
             ++this.counter < this.currentAyah.questions.length
           ) {
             this.getQuestionByWord();
@@ -184,10 +254,16 @@ export default {
             this.counter = 1;
             this.questionNumber++;
             this.isLoading = true;
-            this.getQuestion();
+            if (this.$route.params.type == "Verse") {
+              this.question = this.getQuestionAyah();
+              this.surah = this.question.surah;
+            } else {
+              this.getQuestion();
+              this.surah = this.currentAyah.title;
+            }
+            this.countDown = this.maxTime;
+            this.countDownTimer();
           }
-          this.countDown = this.maxTime;
-          this.countDownTimer();
         } else {
           this.$router.push({
             name: "play-personal-test-result",

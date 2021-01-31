@@ -55,7 +55,7 @@
             params: {
               type: testType,
               basedOn: testBasedOn,
-              chosen: chosen,
+              chosen: number,
             },
           }"
         >
@@ -90,6 +90,22 @@ export default {
         return this.surahList;
       } else {
         return this.juzList;
+      }
+    },
+    number() {
+      if (this.chosen != "") {
+        if (this.testBasedOn == "Surah") {
+          for (var i = 0; i < this.surahList.length; i++) {
+            if (this.surahList[i].name == this.chosen) {
+              return this.surahList[i].number;
+            }
+          }
+          return 0;
+        } else {
+          return this.chosen.split(" ")[1];
+        }
+      } else {
+        return 0;
       }
     },
   },
