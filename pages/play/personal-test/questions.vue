@@ -30,7 +30,7 @@
       </div>
       <div class="main mt-3 pt-4 pb-3 container">
         <h5>
-          <strong>{{ surah }}</strong>
+          <strong>{{ currentAyah.title }}</strong>
         </h5>
         <div class="question-section pt-3 pb-3">
           <h3>{{ question.text }}</h3>
@@ -113,28 +113,21 @@ export default {
       maxTime: 25,
       countDown: 25,
       questionNumber: 1,
+      counter: 1,
       question: null,
+      currentAyah: null,
+      partialQuestion: "",
       surah: null,
       showResult: false,
       score: 0,
       isLoading: true,
+      mode: null,
     };
   },
   created() {
+    this.mode = this.$route.params.type;
     this.surah = this.$route.params.chosen;
-    this.question = this.getQuestion();
-
-    // console.log(this.$store.state.question);
-    // if (this.$store.state.question == null) {
-    //   this.getQuestion();
-    //   this.surah = this.$route.params.chosen;
-    // } else {
-    //   this.surah = this.$store.state.question.conf.number;
-    //   this.question = this.$store.state.question.currentQuestion;
-    //   this.questionNumber = this.$store.state.question.questionNumber;
-    //   this.countDown = this.$store.state.countDown;
-    //   this.isLoading = false;
-    // }
+    this.getQuestion();
   },
   methods: {
     countDownTimer() {
@@ -147,6 +140,9 @@ export default {
         this.handleAnswerClick(false);
       }
     },
+    getQuestionByWord() {
+      this.question = this.currentAyah.questions[this.counter];
+    },
     async getQuestion() {
       await apiInterface
         .getQuestion({
@@ -155,7 +151,12 @@ export default {
           number: this.$route.params.chosen,
         })
         .then((response) => {
-          this.question = response.data;
+          if (response.data.mode == "word") {
+            this.currentAyah = response.data;
+            this.getQuestionByWord();
+          } else {
+            this.question = response.data;
+          }
           this.isLoading = false;
           clearTimeout(this.timer);
           this.countDownTimer();
@@ -165,13 +166,6 @@ export default {
       if (this.showResult) return; // prevent user clicked button when state is showing result
 
       clearTimeout(this.timer);
-      this.review[this.questionNumber - 1] = {
-        name: this.currentQuestion.surah,
-        verseNum: this.currentQuestion.verseNumber,
-        isCorrect: isCorrect,
-      };
-
-      // handling if time is out and user not answered
       if (this.countDown > 0) {
         this.question.options[index].selected = true;
       }
@@ -181,16 +175,20 @@ export default {
       this.showResult = true;
       setTimeout(() => {
         if (this.questionNumber + 1 <= 10) {
-          this.questionNumber++;
-          this.question = this.getQuestion();
+          if (
+            this.mode == "Word" &&
+            ++this.counter < this.currentAyah.questions.length
+          ) {
+            this.getQuestionByWord();
+          } else {
+            this.counter = 1;
+            this.questionNumber++;
+            this.isLoading = true;
+            this.getQuestion();
+          }
           this.countDown = this.maxTime;
           this.countDownTimer();
         } else {
-          this.$store.commit("SET_PLAY_RESULT", {
-            review: this.review,
-            totalQuestion: this.questionNumber,
-            totalCorrectness: this.score,
-          });
           this.$router.push({
             name: "play-personal-test-result",
           });
