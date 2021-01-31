@@ -134,7 +134,6 @@ export default {
     } else {
       this.mode = this.$route.params.type;
       this.getQuestion();
-      this.surah = this.question.title;
     }
     this.countDownTimer();
   },
@@ -151,6 +150,7 @@ export default {
     },
     getQuestionByWord() {
       this.question = this.currentAyah.questions[this.counter];
+      this.surah = this.question.title;
     },
     async getQuestion() {
       await apiInterface
