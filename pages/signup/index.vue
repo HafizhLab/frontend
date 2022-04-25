@@ -90,8 +90,6 @@
 </template>
 
 <script>
-import apiInterface from "~/api/apiInterface.js";
-
 export default {
   components: {},
   data() {
@@ -114,7 +112,7 @@ export default {
       this.errors.email = [];
       this.errors.password1 = [];
       this.errors.password2 = [];
-      await apiInterface
+      await this.$apiInterface
         .register({
           username: this.username,
           password1: this.password,
