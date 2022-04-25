@@ -63,7 +63,6 @@
 </template>
 
 <script>
-import apiInterface from "~/api/apiInterface.js";
 import VueSimpleSuggest from "vue-simple-suggest";
 import "vue-simple-suggest/dist/styles.css";
 
@@ -112,7 +111,7 @@ export default {
   methods: {
     getSurahNumberByName() {},
     getSurahList() {
-      apiInterface.getQuranMeta().then((response) => {
+      this.$apiInterface.getQuranMeta().then((response) => {
         var result = [];
         response.data.data.surahs.references.forEach((surah) => {
           result.push({

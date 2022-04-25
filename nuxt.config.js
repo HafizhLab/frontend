@@ -48,9 +48,16 @@ module.exports = {
       }
     },
   },
-  modules: ["@nuxtjs/pwa", "bootstrap-vue/nuxt"],
+  modules: ["@nuxtjs/axios", "@nuxtjs/pwa", "bootstrap-vue/nuxt"],
+  plugins: ["~/plugins/api.js"],
   bootstrapVue: {
     icons: true,
   },
   css: ["~/assets/fonts/montserrat.css", "~/assets/fonts/kitab.css"],
+  publicRuntimeConfig: {
+    baseURLBackend:
+      process.env.BASE_URL_BACKEND || "http://hafizhlab.hashlash.dev",
+    baseURLQuran: process.env.BASE_URL_QURAN || "http://api.alquran.cloud",
+    baseURLAuth: process.env.BASE_URL_AUTH || "http://localhost:8000",
+  },
 };
