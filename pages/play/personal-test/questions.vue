@@ -103,7 +103,6 @@
 </template>
 
 <script>
-import apiInterface from "~/api/apiInterface.js";
 import Dummy from "~/assets/AlBaqarah.json";
 
 export default {
@@ -157,7 +156,7 @@ export default {
       }
     },
     async getQuestionWord() {
-      await apiInterface
+      await this.$apiInterface
         .getQuestion({
           mode: this.$route.params.type.toLowerCase(),
           type: this.$route.params.basedOn.toLowerCase(),

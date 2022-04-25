@@ -54,7 +54,6 @@
 </template>
 
 <script>
-import apiInterface from "~/api/apiInterface.js";
 import cookie from "js-cookie";
 
 export default {
@@ -78,7 +77,7 @@ export default {
           path: "/",
         });
       } else {
-        apiInterface
+        this.$apiInterface
           .login({
             username: this.username,
             password: this.password,
