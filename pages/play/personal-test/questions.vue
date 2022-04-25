@@ -30,7 +30,7 @@
       </div>
       <div class="main mt-3 pt-4 pb-3 container">
         <h5>
-          <strong>{{ question.title }}</strong>
+          <strong>{{ surah }}</strong>
         </h5>
         <div class="question-section pt-3 pb-3">
           <h3>{{ question.text }}</h3>
@@ -112,13 +112,18 @@ export default {
       maxTime: 25,
       countDown: 25,
       questionNumber: 1,
+      counter: 1,
       question: null,
+      currentAyah: null,
+      partialQuestion: "",
       juzData: null,
       surah: null,
       showResult: false,
       score: 0,
       isLoading: true,
       review: {},
+      mode: null,
+      totalQuestion: 0,
     };
   },
   created() {
@@ -126,23 +131,11 @@ export default {
     if (this.$route.params.type == "Verse") {
       this.question = this.getQuestionAyah();
       this.surah = this.question.surah;
+      this.countDownTimer();
     } else {
-      this.question = this.getQuestionWord();
-      this.surah = this.question.title;
+      this.mode = this.$route.params.type;
+      this.getQuestion();
     }
-    this.countDownTimer();
-
-    // console.log(this.$store.state.question);
-    // if (this.$store.state.question == null) {
-    //   this.getQuestion();
-    //   this.surah = this.$route.params.chosen;
-    // } else {
-    //   this.surah = this.$store.state.question.conf.number;
-    //   this.question = this.$store.state.question.currentQuestion;
-    //   this.questionNumber = this.$store.state.question.questionNumber;
-    //   this.countDown = this.$store.state.countDown;
-    //   this.isLoading = false;
-    // }
   },
   methods: {
     countDownTimer() {
@@ -155,7 +148,13 @@ export default {
         this.handleAnswerClick(false);
       }
     },
-    async getQuestionWord() {
+    getQuestionByWord() {
+      this.totalQuestion += 1;
+      this.question = this.currentAyah.questions[this.counter];
+      this.surah = this.question.title;
+      this.countDownTimer();
+    },
+    async getQuestion() {
       await this.$apiInterface
         .getQuestion({
           mode: this.$route.params.type.toLowerCase(),
@@ -163,12 +162,18 @@ export default {
           number: this.$route.params.chosen,
         })
         .then((response) => {
-          this.question = response.data;
+          if (response.data.mode == "word") {
+            this.currentAyah = response.data;
+            this.getQuestionByWord();
+          } else {
+            this.question = response.data;
+          }
           this.isLoading = false;
           clearTimeout(this.timer);
         });
     },
     getQuestionAyah() {
+      this.totalQuestion += 1;
       var currentAyah = Math.floor(Math.random() * this.juzData.length - 1);
       var question = {
         text: this.juzData[currentAyah].text,
@@ -218,11 +223,14 @@ export default {
       if (this.showResult) return; // prevent user clicked button when state is showing result
 
       clearTimeout(this.timer);
-      this.review[this.questionNumber - 1] = {
-        name: this.question.surah,
-        verseNum: this.question.verseNumber,
-        isCorrect: isCorrect,
-      };
+
+      if (this.$route.params.type == "Verse") {
+        this.review[this.questionNumber - 1] = {
+          name: this.question.surah,
+          verseNum: this.question.verseNumber,
+          isCorrect: isCorrect,
+        };
+      }
 
       // handling if time is out and user not answered
       if (this.countDown > 0) {
@@ -234,20 +242,29 @@ export default {
       this.showResult = true;
       setTimeout(() => {
         if (this.questionNumber + 1 <= 10) {
-          this.questionNumber++;
-          if (this.$route.params.type == "Verse") {
-            this.question = this.getQuestionAyah();
-            this.surah = this.question.surah;
+          if (
+            this.$route.params.type == "Word" &&
+            ++this.counter < this.currentAyah.questions.length
+          ) {
+            this.getQuestionByWord();
           } else {
-            this.question = this.getQuestionWord();
-            this.surah = this.question.title;
+            this.counter = 1;
+            this.questionNumber++;
+            this.isLoading = true;
+            if (this.$route.params.type == "Verse") {
+              this.question = this.getQuestionAyah();
+              this.surah = this.question.surah;
+            } else {
+              this.getQuestion();
+              this.surah = this.currentAyah.title;
+            }
+            this.countDown = this.maxTime;
+            this.countDownTimer();
           }
-          this.countDown = this.maxTime;
-          this.countDownTimer();
         } else {
           this.$store.commit("SET_PLAY_RESULT", {
             review: this.review,
-            totalQuestion: this.questionNumber,
+            totalQuestion: this.totalQuestion,
             totalCorrectness: this.score,
           });
           this.$router.push({
