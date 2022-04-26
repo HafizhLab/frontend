@@ -2,7 +2,7 @@
   <b-container class="nav-container" fluid>
     <b-row align-v="center" class="nav-items">
       <b-col class="text-center">
-        <nuxt-link to="/">
+        <nuxt-link to="/home">
           <div v-if="$route.name.startsWith('index')">
             <img
               src="~/assets/img/NavMenu/home_active.png"
