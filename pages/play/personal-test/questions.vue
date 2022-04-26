@@ -128,14 +128,8 @@ export default {
   },
   created() {
     this.juzData = Dummy.data[0].ayahs;
-    if (this.$route.params.type == "Verse") {
-      this.question = this.getQuestionAyah();
-      this.surah = this.question.surah;
-      this.countDownTimer();
-    } else {
-      this.mode = this.$route.params.type;
-      this.getQuestion();
-    }
+    this.mode = this.$route.params.type;
+    this.getQuestion();
   },
   methods: {
     countDownTimer() {
@@ -151,7 +145,6 @@ export default {
     getQuestionByWord() {
       this.totalQuestion += 1;
       this.question = this.currentAyah.questions[this.counter];
-      this.surah = this.question.title;
       this.countDownTimer();
     },
     async getQuestion() {
@@ -162,11 +155,14 @@ export default {
           number: this.$route.params.chosen,
         })
         .then((response) => {
+          this.surah = response.data.title;
           if (response.data.mode == "word") {
             this.currentAyah = response.data;
             this.getQuestionByWord();
           } else {
+            this.totalQuestion += 1;
             this.question = response.data;
+            this.countDownTimer();
           }
           this.isLoading = false;
           clearTimeout(this.timer);
@@ -251,13 +247,7 @@ export default {
             this.counter = 1;
             this.questionNumber++;
             this.isLoading = true;
-            if (this.$route.params.type == "Verse") {
-              this.question = this.getQuestionAyah();
-              this.surah = this.question.surah;
-            } else {
-              this.getQuestion();
-              this.surah = this.currentAyah.title;
-            }
+            this.getQuestion();
             this.countDown = this.maxTime;
             this.countDownTimer();
           }
