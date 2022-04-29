@@ -40,10 +40,8 @@ export default function ({ $axios, $config }, inject) {
     },
 
     /* Question */
-    getQuestion(data) {
-      return be.get(
-        `questions/?mode=${data.mode}&type=${data.type}&number=${data.number}`
-      );
+    getQuestion(params) {
+      return be.get("/questions/", { params: params });
     },
   };
 
