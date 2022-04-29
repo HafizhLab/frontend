@@ -30,7 +30,7 @@
       </div>
       <div class="main mt-3 pt-4 pb-3 container">
         <h5>
-          <strong>{{ surah }}</strong>
+          <strong>{{ surah }}: {{ ayah }}</strong>
         </h5>
         <div class="question-section pt-3 pb-3">
           <h3>{{ question.text }}</h3>
@@ -119,6 +119,7 @@ export default {
       partialQuestion: "",
       juzData: null,
       surah: null,
+      ayah: null,
       showResult: false,
       score: 0,
       isLoading: true,
@@ -158,6 +159,7 @@ export default {
         })
         .then((response) => {
           this.surah = response.data.title;
+          this.ayah = response.data.number;
           this.challenge = response.data.challenge;
           if (response.data.mode == "word") {
             this.currentAyah = response.data;
