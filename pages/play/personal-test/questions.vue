@@ -113,6 +113,7 @@ export default {
       countDown: 25,
       questionNumber: 1,
       counter: 1,
+      challenge: null,
       question: null,
       currentAyah: null,
       partialQuestion: "",
@@ -150,12 +151,14 @@ export default {
     async getQuestion() {
       await this.$apiInterface
         .getQuestion({
+          challenge: this.challenge,
           mode: this.$route.params.type.toLowerCase(),
           type: this.$route.params.basedOn.toLowerCase(),
           number: this.$route.params.chosen,
         })
         .then((response) => {
           this.surah = response.data.title;
+          this.challenge = response.data.challenge;
           if (response.data.mode == "word") {
             this.currentAyah = response.data;
             this.getQuestionByWord();
