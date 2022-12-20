@@ -247,7 +247,7 @@ export default {
           });
         }
         this.showResult = false;
-      }, 2000);
+      }, this.$route.params.testType == "Word" ? 500 : 2000);
     },
   },
 };
