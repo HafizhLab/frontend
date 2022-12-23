@@ -21,8 +21,7 @@ module.exports = {
       },
       {
         rel: "stylesheet",
-        href:
-          "https://fonts.googleapis.com/css2?family=Scheherazade:wght@400;700&display=swap",
+        href: "https://fonts.googleapis.com/css2?family=Scheherazade:wght@400;700&display=swap",
       },
     ],
   },

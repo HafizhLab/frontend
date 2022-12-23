@@ -28,6 +28,7 @@
 <script>
 export default {
   components: {},
+  middleware: "auth",
   data() {
     return {
       username: "",
@@ -36,7 +37,6 @@ export default {
   created() {
     this.username = this.$store.state.user.username;
   },
-  middleware: "auth",
 };
 </script>
 
