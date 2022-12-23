@@ -47,6 +47,11 @@
 <script>
 export default {
   components: {},
+  validate({ params, redirect }) {
+    if (params.type == "" || params.basedOn == "" || params.chosen == "")
+      redirect({ name: "play-multiplayer-search-room" });
+    return true;
+  },
   data() {
     return {
       listRooms: [
@@ -67,11 +72,6 @@ export default {
         },
       ],
     };
-  },
-  validate({ params, redirect }) {
-    if (params.type == "" || params.basedOn == "" || params.chosen == "")
-      redirect({ name: "play-multiplayer-search-room" });
-    return true;
   },
   methods: {},
 };
