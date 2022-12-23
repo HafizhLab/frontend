@@ -249,7 +249,7 @@ export default {
           }
           this.showResult = false;
         },
-        this.$route.params.testType == "Word" ? 500 : 2000
+        this.$route.params.testType == "Word" ? 750 : 2000
       );
     },
   },
