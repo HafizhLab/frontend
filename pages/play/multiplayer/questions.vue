@@ -220,34 +220,37 @@ export default {
       this.averageTime += this.countDown;
 
       this.showResult = true;
-      setTimeout(() => {
-        if (this.questionNumber + 1 <= 10) {
-          this.questionNumber++;
-          if (this.$route.params.testType == "Verse") {
-            this.currentQuestion = this.getQuestionAyah();
-            this.surah = this.currentQuestion.surah;
+      setTimeout(
+        () => {
+          if (this.questionNumber + 1 <= 10) {
+            this.questionNumber++;
+            if (this.$route.params.testType == "Verse") {
+              this.currentQuestion = this.getQuestionAyah();
+              this.surah = this.currentQuestion.surah;
+            } else {
+              this.currentQuestion = this.getQuestionWord();
+              this.surah = this.currentQuestion.title;
+            }
+            this.countDown = this.maxTime;
+            this.countDownTimer();
           } else {
-            this.currentQuestion = this.getQuestionWord();
-            this.surah = this.currentQuestion.title;
+            this.$store.commit("SET_PLAY_RESULT", {
+              review: this.review,
+            });
+            this.$router.push({
+              name: "play-multiplayer-result",
+              params: {
+                surah: this.surah,
+                playerScore: this.score / (this.maxTime * 10),
+                playerCorrect: this.correctCount,
+                playerAverageTime: this.averageTime / 10,
+              },
+            });
           }
-          this.countDown = this.maxTime;
-          this.countDownTimer();
-        } else {
-          this.$store.commit("SET_PLAY_RESULT", {
-            review: this.review,
-          });
-          this.$router.push({
-            name: "play-multiplayer-result",
-            params: {
-              surah: this.surah,
-              playerScore: this.score / (this.maxTime * 10),
-              playerCorrect: this.correctCount,
-              playerAverageTime: this.averageTime / 10,
-            },
-          });
-        }
-        this.showResult = false;
-      }, this.$route.params.testType == "Word" ? 500 : 2000);
+          this.showResult = false;
+        },
+        this.$route.params.testType == "Word" ? 500 : 2000
+      );
     },
   },
 };

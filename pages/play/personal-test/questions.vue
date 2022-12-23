@@ -194,33 +194,36 @@ export default {
         this.score++;
       }
       this.showResult = true;
-      setTimeout(() => {
-        if (this.questionNumber + 1 <= 10) {
-          if (
-            this.$route.params.type == "Word" &&
-            ++this.counter < this.currentAyah.questions.length
-          ) {
-            this.getQuestionByWord();
+      setTimeout(
+        () => {
+          if (this.questionNumber + 1 <= 10) {
+            if (
+              this.$route.params.type == "Word" &&
+              ++this.counter < this.currentAyah.questions.length
+            ) {
+              this.getQuestionByWord();
+            } else {
+              this.counter = 1;
+              this.questionNumber++;
+              this.isLoading = true;
+              this.getQuestion();
+              this.countDown = this.maxTime;
+              this.countDownTimer();
+            }
           } else {
-            this.counter = 1;
-            this.questionNumber++;
-            this.isLoading = true;
-            this.getQuestion();
-            this.countDown = this.maxTime;
-            this.countDownTimer();
+            this.$store.commit("SET_PLAY_RESULT", {
+              review: this.review,
+              totalQuestion: this.totalQuestion,
+              totalCorrectness: this.score,
+            });
+            this.$router.push({
+              name: "play-personal-test-result",
+            });
           }
-        } else {
-          this.$store.commit("SET_PLAY_RESULT", {
-            review: this.review,
-            totalQuestion: this.totalQuestion,
-            totalCorrectness: this.score,
-          });
-          this.$router.push({
-            name: "play-personal-test-result",
-          });
-        }
-        this.showResult = false;
-      }, this.$route.params.testType == "Word" ? 500 : 2000);
+          this.showResult = false;
+        },
+        this.$route.params.testType == "Word" ? 500 : 2000
+      );
     },
   },
 };
