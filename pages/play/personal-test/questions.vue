@@ -222,7 +222,7 @@ export default {
           }
           this.showResult = false;
         },
-        this.$route.params.type == "Word" ? 750 : 2000
+        this.$route.params.type == "Word" ? (isCorrect ? 500 : 1000) : 2000
       );
     },
   },
